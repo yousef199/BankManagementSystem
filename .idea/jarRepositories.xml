@@ -2,9 +2,39 @@
 <project version="4">
   <component name="RemoteRepositoriesConfiguration">
     <remote-repository>
+      <option name="id" value="clojars" />
+      <option name="name" value="clojars" />
+      <option name="url" value="http://10.12.26.24:8081/nexus/content/repositories/clojars/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="central" />
       <option name="name" value="Central Repository" />
       <option name="url" value="https://repo.maven.apache.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="Apache_Release" />
+      <option name="name" value="Apache_Release" />
+      <option name="url" value="http://10.12.26.24:8081/nexus/content/repositories/Apache_Release/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central" />
+      <option name="name" value="central" />
+      <option name="url" value="http://10.12.26.24:8081/nexus/content/repositories/central/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="jbossRepo" />
+      <option name="name" value="jbossRepo" />
+      <option name="url" value="http://10.12.26.24:8081/nexus/content/repositories/jbossRepo/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="thirdparty" />
+      <option name="name" value="thirdparty" />
+      <option name="url" value="http://10.12.26.24:8081/nexus/content/repositories/thirdparty/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="snapshots" />
+      <option name="name" value="Internal Snapshots" />
+      <option name="url" value="http://10.12.26.24:8081/nexus/content/repositories/snapshots/" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="central" />
@@ -15,6 +45,21 @@
       <option name="id" value="jboss.community" />
       <option name="name" value="JBoss Community repository" />
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="releases" />
+      <option name="name" value="Internal Releases" />
+      <option name="url" value="http://10.12.26.24:8081/nexus/content/repositories/releases/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="microsoft_sqlserver" />
+      <option name="name" value="microsoft_sqlserver" />
+      <option name="url" value="http://10.12.26.24:8081/nexus/content/repositories/microsoft_sqlserver/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="primefaces_Repo" />
+      <option name="name" value="primefaces_Repo" />
+      <option name="url" value="http://10.12.26.24:8081/nexus/content/repositories/primefaces_Repo/" />
     </remote-repository>
   </component>
 </project>

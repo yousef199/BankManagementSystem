@@ -1,0 +1,48 @@
+# IntelliJ IDEA specific
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+*.class
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+
+# Build directories
+target/
+build/
+
+# Maven
+/.mvn/
+!/.mvn/wrapper/mvnw
+!/.mvn/wrapper/mvnw.cmd
+!/.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+.gradle/
+build/
+!gradle-wrapper.jar
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Coverage
+*.lcov
+*.coverage
+
+# JUnit test results
+/TEST-*.xml
+
