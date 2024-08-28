@@ -1,7 +1,10 @@
-package com.customer;
+package com.customer.controller;
 
+import com.customer.entity.Customer;
+import com.customer.dto.CustomerRequestDTO;
+import com.customer.dto.CustomerResponseDTO;
+import com.customer.service.CustomerService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

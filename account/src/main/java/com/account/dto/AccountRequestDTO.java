@@ -1,4 +1,4 @@
-package com.account;
+package com.account.dto;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;

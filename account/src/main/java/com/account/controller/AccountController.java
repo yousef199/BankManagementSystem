@@ -1,5 +1,9 @@
-package com.account;
+package com.account.controller;
 
+import com.account.entity.Account;
+import com.account.dto.AccountRequestDTO;
+import com.account.dto.AccountResponseDTO;
+import com.account.service.AccountService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

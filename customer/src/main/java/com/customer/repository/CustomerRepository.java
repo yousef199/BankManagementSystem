@@ -1,4 +1,4 @@
-package com.customer;
+package com.customer.repository;
 
 public class CustomerRepository {
 }

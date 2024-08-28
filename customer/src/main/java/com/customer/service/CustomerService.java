@@ -1,5 +1,8 @@
-package com.customer;
+package com.customer.service;
 
+import com.customer.dto.CustomerRequestDTO;
+import com.customer.dto.CustomerResponseDTO;
+import com.customer.entity.Customer;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

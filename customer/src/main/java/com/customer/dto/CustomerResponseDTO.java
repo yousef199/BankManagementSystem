@@ -1,4 +1,4 @@
-package com.customer;
+package com.customer.dto;
 
 public record CustomerResponseDTO(
         String customerId,
