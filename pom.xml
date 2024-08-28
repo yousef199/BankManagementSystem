@@ -14,13 +14,14 @@
     <groupId>org.example</groupId>
     <artifactId>BankManagementSystem</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>${revision}</version>
     <modules>
         <module>eureka-server</module>
         <module>apigateway</module>
         <module>clients</module>
         <module>customer</module>
         <module>account</module>
+        <module>commons</module>
     </modules>
     <properties>
         <java.version>17</java.version>
@@ -29,6 +30,7 @@
         <spring-cloud.version>2023.0.3</spring-cloud.version>
         <flyway.version>9.22.3</flyway.version>
         <micrometer-tracing.version>1.3.3</micrometer-tracing.version>
+        <revision>1.0.0</revision>
         <spring.boot-maven-plugin-version>2.5.7</spring.boot-maven-plugin-version>
         <open-api.version>2.5.0</open-api.version>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
@@ -82,15 +84,6 @@
     </dependencyManagement>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                    <version>${spring-boot-maven-plugin-version}</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.jacoco</groupId>
