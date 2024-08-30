@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "Customer")
@@ -36,4 +35,10 @@ public class Customer {
     @Column(name = "email", length = 150, unique = true)
     @Email
     private String email;
+
+    @Column(name = "number_of_accounts", nullable = false)
+    Integer numberOfAccounts;
+
+    @Column(name = "customer_status", length = 20, nullable = false)
+    private String customerStatus;
 }

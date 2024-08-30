@@ -27,6 +27,10 @@ public record CustomerRequestDTO(
 
         @Email(message = "Invalid email format")
         @Size(max = 150, message = "Email cannot exceed 150 characters")
-        String email
+        String email,
+
+        @NotBlank(message = "Customer status cannot be blank")
+        @Pattern(regexp = "active|inactive", message = "Customer status must be either active or inactive")
+        String customerStatus
 ) {
 }

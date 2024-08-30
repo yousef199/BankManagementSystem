@@ -1,15 +1,14 @@
 package com.account.controller;
 
-import com.account.entity.Account;
 import com.account.kafka.KafkaProducerService;
 import com.account.service.AccountService;
 import com.clients.account.dto.AccountRequestDTO;
 import com.clients.account.dto.AccountResponseDTO;
+import com.clients.dto.GeneralResponseDTO;
 import com.common.enums.TopicNames;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,20 +43,20 @@ public class AccountController {
     }
 
     @GetMapping("/customer/{customerId}")
-    public ResponseEntity<List<Account>> getAccountsByCustomerId(@PathVariable String customerId) {
-        List<Account> accounts = accountService.getAccountsByCustomerId(customerId);
+    public ResponseEntity<List<AccountResponseDTO>> getAccountsByCustomerId(@PathVariable String customerId) {
+        List<AccountResponseDTO> accounts = accountService.getAccountsByCustomerId(customerId);
         return ResponseEntity.ok(accounts);
     }
 
     @PutMapping("/{accountId}")
-    public ResponseEntity<Account> updateAccount(@PathVariable String accountId, @Valid @RequestBody Account account) {
-        Account updatedAccount = accountService.updateAccount(accountId, account);
-        return ResponseEntity.ok(updatedAccount);
+    public ResponseEntity<GeneralResponseDTO> updateAccount(@PathVariable String accountId, @Valid @RequestBody AccountRequestDTO accountRequestDTO) {
+        GeneralResponseDTO responseDTO = accountService.updateAccount(accountId, accountRequestDTO);
+        return ResponseEntity.ok(responseDTO);
     }
 
     @DeleteMapping("/{accountId}")
-    public ResponseEntity<Void> deleteAccount(@PathVariable String accountId) {
-        accountService.deleteAccount(accountId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<GeneralResponseDTO> deleteAccount(@PathVariable String accountId) {
+        GeneralResponseDTO responseDTO = accountService.deleteAccount(accountId);
+        return ResponseEntity.ok(responseDTO);
     }
 }

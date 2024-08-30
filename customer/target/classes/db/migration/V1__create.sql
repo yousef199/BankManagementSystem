@@ -6,7 +6,7 @@ CREATE SEQUENCE customer_id_seq
     NO MAXVALUE
     CACHE 1;
 
--- Create the Customer table with an auto-generated 7-digit customer_id
+-- Create the Customer table with an auto-generated 7-digit customer_id and an added customer_status column
 CREATE TABLE Customer (
                           customer_id VARCHAR(7) PRIMARY KEY DEFAULT LPAD(nextval('customer_id_seq')::text, 7, '0'), -- Auto-generated 7-digit customer ID
                           name VARCHAR(100) NOT NULL,           -- Customer's name
@@ -14,5 +14,8 @@ CREATE TABLE Customer (
                           type VARCHAR(20) NOT NULL CHECK (type IN ('retail', 'corporate', 'investment')),  -- Type of customer
                           address VARCHAR(255) NOT NULL,        -- Address of the customer
                           phone_number VARCHAR(15),             -- Optional phone number
-                          email VARCHAR(150) UNIQUE             -- Optional email, must be unique if provided
+                          email VARCHAR(150) UNIQUE,            -- Optional email, must be unique if provided
+                          number_of_accounts INT DEFAULT 0,     -- Number of accounts the customer has
+                          customer_status VARCHAR(20) NOT NULL CHECK (customer_status IN ('active', 'inactive')) -- Customer status
 );
+

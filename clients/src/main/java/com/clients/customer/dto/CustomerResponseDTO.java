@@ -1,6 +1,7 @@
 package com.clients.customer.dto;
 
 public record CustomerResponseDTO(
+        int httpStatus,
         String customerId,
         String name,
         String legalId,
@@ -8,7 +9,8 @@ public record CustomerResponseDTO(
         String address,
         String phoneNumber,
         String email,
-        String status,
+        int numberOfAccounts,
+        String customerStatus, // Added status
         String message
 ) {
 }

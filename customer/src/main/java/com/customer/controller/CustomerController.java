@@ -2,8 +2,8 @@ package com.customer.controller;
 
 import com.clients.customer.dto.CustomerRequestDTO;
 import com.clients.customer.dto.CustomerResponseDTO;
+import com.clients.dto.GeneralResponseDTO;
 import com.common.enums.TopicNames;
-import com.customer.entity.Customer;
 import com.customer.kafka.KafkaProducerService;
 import com.customer.service.CustomerService;
 import jakarta.validation.Valid;
@@ -23,7 +23,7 @@ public class CustomerController {
     private final CustomerService customerService;
     private final KafkaProducerService kafkaProducerService;
 
-    @PostMapping
+    @PostMapping("/registerCustomer")
     public ResponseEntity<CustomerResponseDTO> createCustomer(@Valid @RequestBody CustomerRequestDTO customerRequestDTO) {
         CustomerResponseDTO createdCustomer = customerService.createCustomer(customerRequestDTO);
         kafkaProducerService.sendMessage(TopicNames.CUSTOMER_NEW.getTopicName(), "new customer created");
@@ -43,14 +43,14 @@ public class CustomerController {
     }
 
     @PutMapping("/{customerId}")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable String customerId, @Valid @RequestBody Customer customer) {
-        Customer updatedCustomer = customerService.updateCustomer(customerId, customer);
-        return ResponseEntity.ok(updatedCustomer);
+    public ResponseEntity<GeneralResponseDTO> updateCustomer(@PathVariable String customerId, @Valid @RequestBody CustomerRequestDTO customerRequestDTO) {
+        GeneralResponseDTO generalResponseDTO = customerService.updateCustomer(customerId, customerRequestDTO);
+        return ResponseEntity.ok(generalResponseDTO);
     }
 
     @DeleteMapping("/{customerId}")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable String customerId) {
-        customerService.deleteCustomer(customerId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<GeneralResponseDTO> deleteCustomer(@PathVariable String customerId) {
+        GeneralResponseDTO generalResponseDTO = customerService.deleteCustomer(customerId);
+        return ResponseEntity.ok(generalResponseDTO);
     }
 }
