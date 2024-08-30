@@ -1,9 +1,9 @@
 package com.account.service;
 
 import com.account.entity.Account;
-import com.account.dto.AccountRequestDTO;
-import com.account.dto.AccountResponseDTO;
 import com.account.repository.AccountRepository;
+import com.clients.account.dto.AccountRequestDTO;
+import com.clients.account.dto.AccountResponseDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

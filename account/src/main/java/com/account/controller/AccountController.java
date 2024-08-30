@@ -1,10 +1,10 @@
 package com.account.controller;
 
 import com.account.entity.Account;
-import com.account.dto.AccountRequestDTO;
-import com.account.dto.AccountResponseDTO;
 import com.account.kafka.KafkaProducerService;
 import com.account.service.AccountService;
+import com.clients.account.dto.AccountRequestDTO;
+import com.clients.account.dto.AccountResponseDTO;
 import com.common.enums.TopicNames;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

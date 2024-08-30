@@ -1,8 +1,8 @@
 package com.customer.controller;
 
+import com.clients.customer.dto.CustomerRequestDTO;
+import com.clients.customer.dto.CustomerResponseDTO;
 import com.customer.entity.Customer;
-import com.customer.dto.CustomerRequestDTO;
-import com.customer.dto.CustomerResponseDTO;
 import com.customer.service.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

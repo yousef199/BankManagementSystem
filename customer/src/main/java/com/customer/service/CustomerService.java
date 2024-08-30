@@ -1,14 +1,21 @@
 package com.customer.service;
 
-import com.customer.dto.CustomerRequestDTO;
-import com.customer.dto.CustomerResponseDTO;
+import com.clients.customer.dto.CustomerRequestDTO;
+import com.clients.customer.dto.CustomerResponseDTO;
 import com.customer.entity.Customer;
+import com.customer.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class CustomerService {
+    private final CustomerRepository customerRepository;
+
+    public CustomerService(CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
+    }
+
     public CustomerResponseDTO createCustomer(CustomerRequestDTO customerRequestDTO) {
         // Implement customer creation logic
         return null;

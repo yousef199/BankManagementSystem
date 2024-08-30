@@ -5,9 +5,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "Customer")
+@Getter @Setter
 public class Customer {
     @Id
     @Column(name = "customer_id", length = 7, nullable = false)
@@ -31,60 +34,4 @@ public class Customer {
     @Column(name = "email", length = 150, unique = true)
     @Email
     private String email;
-
-    public String getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLegalId() {
-        return legalId;
-    }
-
-    public void setLegalId(String legalId) {
-        this.legalId = legalId;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }
