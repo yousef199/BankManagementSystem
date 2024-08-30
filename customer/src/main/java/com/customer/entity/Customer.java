@@ -1,19 +1,21 @@
 package com.customer.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "Customer")
-@Getter @Setter
+@Getter
+@Setter
 public class Customer {
+
     @Id
-    @Column(name = "customer_id", length = 7, nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_seq")
+    @SequenceGenerator(name = "customer_seq", sequenceName = "customer_id_seq", initialValue = 1000000, allocationSize = 1)
+    @Column(name = "customer_id", length = 7, nullable = false, unique = true)
     private String customerId;
 
     @Column(name = "name", length = 100, nullable = false)

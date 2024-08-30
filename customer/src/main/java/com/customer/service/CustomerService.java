@@ -1,20 +1,20 @@
 package com.customer.service;
 
+import com.clients.account.AccountClient;
 import com.clients.customer.dto.CustomerRequestDTO;
 import com.clients.customer.dto.CustomerResponseDTO;
 import com.customer.entity.Customer;
 import com.customer.repository.CustomerRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CustomerService {
     private final CustomerRepository customerRepository;
-
-    public CustomerService(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
-    }
+    private final AccountClient accountClient;
 
     public CustomerResponseDTO createCustomer(CustomerRequestDTO customerRequestDTO) {
         // Implement customer creation logic

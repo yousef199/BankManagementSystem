@@ -7,6 +7,7 @@ import com.customer.entity.Customer;
 import com.customer.kafka.KafkaProducerService;
 import com.customer.service.CustomerService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,16 +15,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("/api/v1/customers")
+@RestController
+@RequestMapping("/api/v1/customers")
 @Slf4j
+@RequiredArgsConstructor
 public class CustomerController {
     private final CustomerService customerService;
     private final KafkaProducerService kafkaProducerService;
-
-    public CustomerController(CustomerService customerService , KafkaProducerService kafkaProducerService) {
-        this.customerService = customerService;
-        this.kafkaProducerService = kafkaProducerService;
-    }
 
     @PostMapping
     public ResponseEntity<CustomerResponseDTO> createCustomer(@Valid @RequestBody CustomerRequestDTO customerRequestDTO) {

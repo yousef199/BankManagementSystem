@@ -7,6 +7,7 @@ import com.clients.account.dto.AccountRequestDTO;
 import com.clients.account.dto.AccountResponseDTO;
 import com.common.enums.TopicNames;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,17 +16,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("/api/v1/accounts")
+@RestController
 @Slf4j
+@RequestMapping("/api/v1/accounts")
+@RequiredArgsConstructor
 public class AccountController {
-
     private final AccountService accountService;
     private final KafkaProducerService kafkaProducerService;
-
-    public AccountController(AccountService accountService , KafkaProducerService kafkaProducerService) {
-        this.accountService = accountService;
-        this.kafkaProducerService = kafkaProducerService;
-    }
 
     @PostMapping("/registerAccount")
     public ResponseEntity<AccountResponseDTO> createAccount(@Valid @RequestBody AccountRequestDTO accountRequestDTO) {
@@ -40,6 +37,7 @@ public class AccountController {
         return ResponseEntity.ok(accountResponseDTO);
     }
 
+    @GetMapping
     public ResponseEntity<List<AccountResponseDTO>> getAllAccounts() {
          List<AccountResponseDTO> allAccounts = accountService.getAllAccounts();
          return ResponseEntity.ok(allAccounts);
