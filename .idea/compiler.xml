@@ -11,6 +11,7 @@
         <module name="clients" />
         <module name="eureka-server" />
         <module name="account" />
+        <module name="commons" />
         <module name="customer" />
       </profile>
     </annotationProcessing>
@@ -20,6 +21,7 @@
       <module name="account" options="-parameters" />
       <module name="apigateway" options="-parameters" />
       <module name="clients" options="-parameters" />
+      <module name="commons" options="-parameters" />
       <module name="customer" options="-parameters" />
       <module name="eureka-server" options="-parameters" />
     </option>

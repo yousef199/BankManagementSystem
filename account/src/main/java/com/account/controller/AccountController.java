@@ -3,7 +3,9 @@ package com.account.controller;
 import com.account.entity.Account;
 import com.account.dto.AccountRequestDTO;
 import com.account.dto.AccountResponseDTO;
+import com.account.kafka.KafkaProducerService;
 import com.account.service.AccountService;
+import com.common.enums.TopicNames;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,19 +15,21 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/accounts")
+@RequestMapping("/api/v1/accounts")
 public class AccountController {
 
     private final AccountService accountService;
+    private final KafkaProducerService kafkaProducerService;
 
-    @Autowired
-    public AccountController(AccountService accountService) {
+    public AccountController(AccountService accountService , KafkaProducerService kafkaProducerService) {
         this.accountService = accountService;
+        this.kafkaProducerService = kafkaProducerService;
     }
 
-    @PostMapping
+    @PostMapping("/registerAccount")
     public ResponseEntity<AccountResponseDTO> createAccount(@Valid @RequestBody AccountRequestDTO accountRequestDTO) {
         AccountResponseDTO accountResponseDTO = accountService.createAccount(accountRequestDTO);
+        kafkaProducerService.sendMessage(TopicNames.ACCOUNT_NEW.getTopicName(), "new account created successfully");
         return new ResponseEntity<>(accountResponseDTO, HttpStatus.CREATED);
     }
 
