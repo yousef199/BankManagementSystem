@@ -4,6 +4,10 @@ This project implements a banking system using microservices architecture with S
 
 ## Architecture Overview
 
+### High Level Design
+![Alt text](images/BankSystem.jpg)
+
+### Components
 - Eureka Server: Service discovery
 - Spring API Gateway: Central entry point for all requests
 - Customer Service: Manages customer information
