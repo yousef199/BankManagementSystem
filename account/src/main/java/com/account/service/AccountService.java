@@ -26,6 +26,10 @@ public class AccountService {
         return null;
     }
 
+    public List<AccountResponseDTO> getAllAccounts() {
+        return null;
+    }
+
     public List<Account> getAccountsByCustomerId(String customerId) {
         // Implement logic to get accounts by customer ID
         return null;

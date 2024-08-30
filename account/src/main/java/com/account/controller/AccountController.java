@@ -39,6 +39,11 @@ public class AccountController {
         return ResponseEntity.ok(accountResponseDTO);
     }
 
+    public ResponseEntity<List<AccountResponseDTO>> getAllAccounts() {
+         List<AccountResponseDTO> allAccounts = accountService.getAllAccounts();
+         return ResponseEntity.ok(allAccounts);
+    }
+
     @GetMapping("/customer/{customerId}")
     public ResponseEntity<List<Account>> getAccountsByCustomerId(@PathVariable String customerId) {
         List<Account> accounts = accountService.getAccountsByCustomerId(customerId);

@@ -19,7 +19,7 @@ public class CustomerService {
         return null;
     }
 
-    public List<Customer> getAllCustomers() {
+    public List<CustomerResponseDTO> getAllCustomers() {
         // Implement logic to get all customers
         return null;
     }
