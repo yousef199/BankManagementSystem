@@ -1,4 +1,4 @@
-package com.account.kafka;
+package com.customer.kafka;
 
 import com.common.enums.TopicNames;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -6,23 +6,23 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.TopicBuilder;
 
 @Configuration
-public class KafkaConfiguration {
+public class KafkaTopicConfiguration {
 
-    public NewTopic newAccountTopic() {
+    public NewTopic newCustomerTopic() {
         return TopicBuilder.
-                name(TopicNames.ACCOUNT_NEW.getTopicName())
+                name(TopicNames.CUSTOMER_NEW.getTopicName())
                 .build();
     }
 
-    public NewTopic updateAccountTopic() {
+    public NewTopic updateCustomerTopic() {
         return TopicBuilder.
-                name(TopicNames.ACCOUNT_UPDATE.getTopicName())
+                name(TopicNames.CUSTOMER_UPDATE.getTopicName())
                 .build();
     }
 
-    public NewTopic deleteAccountTopic() {
+    public NewTopic deleteCustomerTopic() {
         return TopicBuilder.
-                name(TopicNames.ACCOUNT_DELETE.getTopicName())
+                name(TopicNames.CUSTOMER_DELETE.getTopicName())
                 .build();
     }
 }

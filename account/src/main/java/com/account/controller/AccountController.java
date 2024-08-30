@@ -7,6 +7,7 @@ import com.clients.account.dto.AccountRequestDTO;
 import com.clients.account.dto.AccountResponseDTO;
 import com.common.enums.TopicNames;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/v1/accounts")
+@RestController("/api/v1/accounts")
+@Slf4j
 public class AccountController {
 
     private final AccountService accountService;
