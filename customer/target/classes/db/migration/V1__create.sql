@@ -18,4 +18,3 @@ CREATE TABLE Customer (
                           number_of_accounts INT DEFAULT 0,     -- Number of accounts the customer has
                           customer_status VARCHAR(20) NOT NULL CHECK (customer_status IN ('active', 'inactive')) -- Customer status
 );
-
