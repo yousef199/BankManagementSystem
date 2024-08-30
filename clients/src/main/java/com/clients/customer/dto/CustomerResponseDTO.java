@@ -2,7 +2,7 @@ package com.clients.customer.dto;
 
 public record CustomerResponseDTO(
         int httpStatus,
-        String customerId,
+        int customerId,
         String name,
         String legalId,
         String type,

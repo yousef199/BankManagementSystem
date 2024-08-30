@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 
 public record AccountResponseDTO(
         int httpStatus,  // HTTP status code
-        String accountId,
-        String customerId,
+        int accountId,
+        int customerId,
         BigDecimal balance,
         String accountType,
         String accountStatus,

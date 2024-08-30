@@ -4,6 +4,7 @@ import com.account.kafka.KafkaProducerService;
 import com.account.service.AccountService;
 import com.clients.account.dto.AccountRequestDTO;
 import com.clients.account.dto.AccountResponseDTO;
+import com.clients.account.dto.KafkaNewAccountDTO;
 import com.clients.dto.GeneralResponseDTO;
 import com.common.enums.TopicNames;
 import jakarta.validation.Valid;
@@ -26,12 +27,13 @@ public class AccountController {
     @PostMapping("/registerAccount")
     public ResponseEntity<AccountResponseDTO> createAccount(@Valid @RequestBody AccountRequestDTO accountRequestDTO) {
         AccountResponseDTO accountResponseDTO = accountService.createAccount(accountRequestDTO);
-        kafkaProducerService.sendMessage(TopicNames.ACCOUNT_NEW.getTopicName(), "new account created successfully");
+        KafkaNewAccountDTO kafkaNewAccountDTO = new KafkaNewAccountDTO(accountResponseDTO.accountId(), accountResponseDTO.customerId() , accountResponseDTO.accountType() , accountResponseDTO.accountStatus());
+        kafkaProducerService.sendMessage(TopicNames.ACCOUNT_NEW.getTopicName(), kafkaNewAccountDTO);
         return new ResponseEntity<>(accountResponseDTO, HttpStatus.CREATED);
     }
 
     @GetMapping("/{accountId}")
-    public ResponseEntity<AccountResponseDTO> getAccount(@PathVariable String accountId) {
+    public ResponseEntity<AccountResponseDTO> getAccount(@PathVariable int accountId) {
         AccountResponseDTO accountResponseDTO = accountService.getAccount(accountId);
         return ResponseEntity.ok(accountResponseDTO);
     }
@@ -42,20 +44,20 @@ public class AccountController {
          return ResponseEntity.ok(allAccounts);
     }
 
-    @GetMapping("/customer/{customerId}")
-    public ResponseEntity<List<AccountResponseDTO>> getAccountsByCustomerId(@PathVariable String customerId) {
+    @GetMapping("/{customerId}")
+    public ResponseEntity<List<AccountResponseDTO>> getAccountsByCustomerId(@PathVariable int customerId) {
         List<AccountResponseDTO> accounts = accountService.getAccountsByCustomerId(customerId);
         return ResponseEntity.ok(accounts);
     }
 
     @PutMapping("/{accountId}")
-    public ResponseEntity<GeneralResponseDTO> updateAccount(@PathVariable String accountId, @Valid @RequestBody AccountRequestDTO accountRequestDTO) {
+    public ResponseEntity<GeneralResponseDTO> updateAccount(@PathVariable int accountId, @Valid @RequestBody AccountRequestDTO accountRequestDTO) {
         GeneralResponseDTO responseDTO = accountService.updateAccount(accountId, accountRequestDTO);
         return ResponseEntity.ok(responseDTO);
     }
 
     @DeleteMapping("/{accountId}")
-    public ResponseEntity<GeneralResponseDTO> deleteAccount(@PathVariable String accountId) {
+    public ResponseEntity<GeneralResponseDTO> deleteAccount(@PathVariable int accountId) {
         GeneralResponseDTO responseDTO = accountService.deleteAccount(accountId);
         return ResponseEntity.ok(responseDTO);
     }

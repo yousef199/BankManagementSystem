@@ -2,6 +2,7 @@ package com.account.service;
 
 import com.account.entity.Account;
 import com.account.exception.AccountNotFoundException;
+import com.account.exception.CustomerNotFoundException;
 import com.account.repository.AccountRepository;
 import com.clients.account.dto.AccountRequestDTO;
 import com.clients.account.dto.AccountResponseDTO;
@@ -23,23 +24,25 @@ public class AccountService {
     private final CustomerClient customerClient;
 
     @Transactional
+    //todo: check all the types of accounts as there could only be one salary account
     public AccountResponseDTO createAccount(AccountRequestDTO accountRequestDTO) {
-        // Validate customer existence
-//        if (customerClient.getCustomer(accountRequestDTO.customerId())) {
-//            throw new IllegalArgumentException("Customer ID does not exist.");
-//        }
-
         CustomerResponseDTO customerResponseDTO = customerClient.getCustomer(accountRequestDTO.customerId()).getBody();
+        if (customerResponseDTO != null && (customerResponseDTO.httpStatus() != HttpStatus.OK.value())) {
+            throw new CustomerNotFoundException("Customer with id: "+accountRequestDTO.customerId()+" not found.");
+        }
         // Generate account ID
-//        String accountId = generateAccountId(accountRequestDTO.customerId());
+        int accountId = generateAccountId(accountRequestDTO.customerId());
 
+        while (accountRepository.existsById(accountId)) {
+            accountId = generateAccountId(accountRequestDTO.customerId());
+        }
         // Create and save the new account
         Account newAccount = new Account();
-//        newAccount.setAccountId(accountId);
+        newAccount.setAccountId(accountId);
         newAccount.setCustomerId(accountRequestDTO.customerId());
-        newAccount.setBalance(accountRequestDTO.initialBalance());
+        newAccount.setBalance(accountRequestDTO.balance());
         newAccount.setAccountType(accountRequestDTO.accountType());
-        newAccount.setAccountStatus(AccountStatus.ACTIVE.getStatus()); // Default status
+        newAccount.setAccountStatus(accountRequestDTO.accountStatus()); // Default status
 
         accountRepository.save(newAccount);
 
@@ -54,7 +57,7 @@ public class AccountService {
         );
     }
 
-    public AccountResponseDTO getAccount(String accountId) {
+    public AccountResponseDTO getAccount(int accountId) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new AccountNotFoundException("Account with id "+accountId+" not found."));
 
@@ -84,7 +87,7 @@ public class AccountService {
                 .toList();
     }
 
-    public List<AccountResponseDTO> getAccountsByCustomerId(String customerId) {
+    public List<AccountResponseDTO> getAccountsByCustomerId(int customerId) {
         List<Account> accounts = accountRepository.findByCustomerId(customerId);
         return accounts.stream()
                 .map(account -> new AccountResponseDTO(
@@ -100,13 +103,16 @@ public class AccountService {
     }
 
     @Transactional
-    public GeneralResponseDTO updateAccount(String accountId, AccountRequestDTO accountRequestDTO) {
+    //TODO: what if i dont want to update all fields
+    public GeneralResponseDTO updateAccount(int accountId, AccountRequestDTO accountRequestDTO) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new AccountNotFoundException("Account not found."));
 
         // Update account details
-        account.setBalance(accountRequestDTO.initialBalance());
+        account.setCustomerId(accountRequestDTO.customerId());
+        account.setBalance(accountRequestDTO.balance());
         account.setAccountType(accountRequestDTO.accountType());
+        account.setAccountStatus(accountRequestDTO.accountStatus());
 
         accountRepository.save(account);
 
@@ -117,7 +123,7 @@ public class AccountService {
     }
 
     @Transactional
-    public GeneralResponseDTO deleteAccount(String accountId) {
+    public GeneralResponseDTO deleteAccount(int accountId) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new AccountNotFoundException("Account with id "+accountId+" not found."));
 
@@ -128,5 +134,15 @@ public class AccountService {
                 HttpStatus.OK.value(),  // HTTP status code
                 "Account with id "+accountId+"updated successfully"
         );
+    }
+
+    public int generateAccountId(int customerId) {
+        int suffix = (int) (Math.random() * 1000);  // Generates a number between 0 and 999
+
+        // Format the suffix to ensure it is always 3 digits
+        String formattedSuffix = String.format("%03d", suffix);
+
+        // Append the suffix to the customer ID
+        return Integer.parseInt(customerId + formattedSuffix);
     }
 }

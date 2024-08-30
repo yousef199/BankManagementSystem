@@ -30,6 +30,7 @@ public class CustomerService {
         customer.setPhoneNumber(customerRequestDTO.phoneNumber());
         customer.setEmail(customerRequestDTO.email());
         customer.setCustomerStatus(CustomerStatus.ACTIVE.getStatus()); // Default status for new customers
+        customer.setNumberOfAccounts(0); // Default number of accounts
 
         // Save customer in the repository
         Customer savedCustomer = customerRepository.save(customer);
@@ -50,7 +51,7 @@ public class CustomerService {
         );
     }
 
-    public CustomerResponseDTO getCustomer(String customerId) {
+    public CustomerResponseDTO getCustomer(int customerId) {
         // Fetch the customer from the repository
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException("Customer with id: " + customerId + " not found"));
@@ -91,7 +92,7 @@ public class CustomerService {
         )).toList();
     }
 
-    public GeneralResponseDTO updateCustomer(String customerId, CustomerRequestDTO customerRequestDTO) {
+    public GeneralResponseDTO updateCustomer(int customerId, CustomerRequestDTO customerRequestDTO) {
         // Fetch the customer to update
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException("Customer with id: " + customerId + " not found"));
@@ -115,7 +116,7 @@ public class CustomerService {
         );
     }
 
-    public GeneralResponseDTO deleteCustomer(String customerId) {
+    public GeneralResponseDTO deleteCustomer(int customerId) {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException("Customer with id: " + customerId + " not found"));
 

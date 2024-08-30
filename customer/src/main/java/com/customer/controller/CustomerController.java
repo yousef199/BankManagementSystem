@@ -31,7 +31,7 @@ public class CustomerController {
     }
 
     @GetMapping("/{customerId}")
-    public ResponseEntity<CustomerResponseDTO> getCustomer(@PathVariable String customerId) {
+    public ResponseEntity<CustomerResponseDTO> getCustomer(@PathVariable int customerId) {
         CustomerResponseDTO customerResponseDTO = customerService.getCustomer(customerId);
         return ResponseEntity.ok(customerResponseDTO);
     }
@@ -43,13 +43,13 @@ public class CustomerController {
     }
 
     @PutMapping("/{customerId}")
-    public ResponseEntity<GeneralResponseDTO> updateCustomer(@PathVariable String customerId, @Valid @RequestBody CustomerRequestDTO customerRequestDTO) {
+    public ResponseEntity<GeneralResponseDTO> updateCustomer(@PathVariable int customerId, @Valid @RequestBody CustomerRequestDTO customerRequestDTO) {
         GeneralResponseDTO generalResponseDTO = customerService.updateCustomer(customerId, customerRequestDTO);
         return ResponseEntity.ok(generalResponseDTO);
     }
 
     @DeleteMapping("/{customerId}")
-    public ResponseEntity<GeneralResponseDTO> deleteCustomer(@PathVariable String customerId) {
+    public ResponseEntity<GeneralResponseDTO> deleteCustomer(@PathVariable int customerId) {
         GeneralResponseDTO generalResponseDTO = customerService.deleteCustomer(customerId);
         return ResponseEntity.ok(generalResponseDTO);
     }

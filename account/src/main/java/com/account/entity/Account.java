@@ -16,10 +16,10 @@ import java.math.BigDecimal;
 public class Account {
     @Id
     @Column(name = "account_id", length = 10, nullable = false)
-    private String accountId;
+    private Integer accountId;
 
     @Column(name = "customer_id", length = 7, nullable = false)
-    private String customerId;
+    private Integer customerId;
 
     @Column(name = "balance", precision = 15, scale = 2, nullable = false)
     private BigDecimal balance;

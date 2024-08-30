@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient("customer")
+@FeignClient(name = "customer")
 public interface CustomerClient {
-    @GetMapping("/api/v1/{customerId}")
-    ResponseEntity<CustomerResponseDTO> getCustomer(@PathVariable("customerId") String customerId);
+    @GetMapping("api/v1/customers/{customerId}")
+    ResponseEntity<CustomerResponseDTO> getCustomer(@PathVariable("customerId") int customerId);
 
-    @GetMapping("/api/v1")
+    @GetMapping("api/v1/customers/")
     ResponseEntity<List<CustomerResponseDTO>> getAllCustomers();
 }

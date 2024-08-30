@@ -11,9 +11,9 @@ import java.util.List;
 @FeignClient(name = "account")
 public interface AccountClient {
 
-    @GetMapping("/api/v1/accounts/{accountId}")
-    ResponseEntity<AccountResponseDTO> getAccount(@PathVariable("accountId") String accountId);
+    @GetMapping("api/v1/accounts/{accountId}")
+    ResponseEntity<AccountResponseDTO> getAccount(@PathVariable("accountId") int accountId);
 
-    @GetMapping("/api/v1/accounts")
+    @GetMapping("api/v1/accounts")
     ResponseEntity<List<AccountResponseDTO>> getAllAccounts();
 }

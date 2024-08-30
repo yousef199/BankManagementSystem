@@ -1,23 +1,25 @@
 package com.clients.account.dto;
 
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 
 public record AccountRequestDTO(
-        @NotBlank(message = "Customer ID cannot be blank")
-        @Pattern(regexp = "\\d{7}", message = "Customer ID must be a 7-digit number")
-        String customerId,
+        @NotNull(message = "Customer ID cannot be null")
+        @Min(value = 1000000, message = "Customer ID must be a 7-digit number")
+        @Max(value = 9999999, message = "Customer ID must be a 7-digit number")
+        Integer customerId,
 
-        @NotNull(message = "Initial balance cannot be null")
-        @DecimalMin(value = "0.0", inclusive = true, message = "Initial balance must be non-negative")
-        BigDecimal initialBalance,
+        @NotNull(message = "Balance cannot be null")
+        @DecimalMin(value = "0.0", inclusive = true, message = "Balance must be non-negative")
+        BigDecimal balance,
 
         @NotBlank(message = "Account type cannot be blank")
         @Pattern(regexp = "salary|savings|investment", message = "Account type must be either salary, savings, or investment")
-        String accountType
+        String accountType,
+
+        @NotBlank(message = "Account status cannot be blank")
+        @Pattern(regexp = "active|inactive|closed", message = "Account status must be either active, inactive, or closed")
+        String accountStatus
 ) {
 }

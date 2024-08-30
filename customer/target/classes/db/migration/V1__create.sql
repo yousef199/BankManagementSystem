@@ -8,7 +8,7 @@ CREATE SEQUENCE customer_id_seq
 
 -- Create the Customer table with an auto-generated 7-digit customer_id and an added customer_status column
 CREATE TABLE Customer (
-                          customer_id VARCHAR(7) PRIMARY KEY DEFAULT LPAD(nextval('customer_id_seq')::text, 7, '0'), -- Auto-generated 7-digit customer ID
+                          customer_id INTEGER PRIMARY KEY DEFAULT nextval('customer_id_seq'), -- Auto-generated integer customer ID
                           name VARCHAR(100) NOT NULL,           -- Customer's name
                           legal_id VARCHAR(50) NOT NULL UNIQUE, -- Unique legal identifier (e.g., SSN, Tax ID)
                           type VARCHAR(20) NOT NULL CHECK (type IN ('retail', 'corporate', 'investment')),  -- Type of customer
