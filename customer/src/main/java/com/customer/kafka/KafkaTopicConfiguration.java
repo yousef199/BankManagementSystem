@@ -5,6 +5,10 @@ import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.TopicBuilder;
 
+/**
+ * @author YQadous
+ * Kafka topic configuration
+ */
 @Configuration
 public class KafkaTopicConfiguration {
 

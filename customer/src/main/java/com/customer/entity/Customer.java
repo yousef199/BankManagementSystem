@@ -7,6 +7,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * @author YQadous
+ * Customer entity
+ */
 @Entity
 @Table(name = "Customer")
 @Getter

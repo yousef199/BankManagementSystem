@@ -7,6 +7,7 @@ import com.customer.exception.CustomerNotFoundException;
 import com.customer.exception.InvalidCustomerDeleteReqeustException;
 import com.customer.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -16,96 +17,88 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
+ * @author YQadous
  * Service class for managing customers.
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
     private final AccountClient accountClient;
 
-    /**
-     * Creates a new customer and saves it in the repository.
-     *
-     * @param customerRequestDTO The customer data for creating a new customer.
-     * @return The response DTO containing the created customer's details.
-     */
     public CustomerResponseDTO createCustomer(CustomerRequestDTO customerRequestDTO) {
+        log.debug("Creating customer with data: {}", customerRequestDTO);
+
         Customer customer = mapToCustomer(customerRequestDTO);
         Customer savedCustomer = customerRepository.save(customer);
+
+        log.info("Customer created successfully with ID: {}", savedCustomer.getCustomerId());
+
         return mapToCustomerResponseDTO(savedCustomer, HttpStatus.CREATED.value(), "Customer created successfully");
     }
 
-    /**
-     * Retrieves a customer by their ID.
-     *
-     * @param customerId The ID of the customer to retrieve.
-     * @return The response DTO containing the customer's details.
-     */
     public CustomerResponseDTO getCustomer(int customerId) {
+        log.debug("Fetching customer with ID: {}", customerId);
+
         Customer customer = findCustomerById(customerId);
+
+        log.info("Customer retrieved successfully with ID: {}", customerId);
         return mapToCustomerResponseDTO(customer, HttpStatus.OK.value(), "Customer retrieved successfully");
     }
 
-    /**
-     * Retrieves all customers.
-     *
-     * @return A list of response DTOs containing the details of all customers.
-     */
     public List<CustomerResponseDTO> getAllCustomers() {
+        log.debug("Fetching all customers");
+
         List<Customer> customers = customerRepository.findAll();
+        log.info("Retrieved {} customers", customers.size());
+
         return customers.stream()
                 .map(customer -> mapToCustomerResponseDTO(customer, HttpStatus.OK.value(), "Customer retrieved successfully"))
                 .toList();
     }
 
-    /**
-     * Updates an existing customer with the provided data.
-     *
-     * @param customerId          The ID of the customer to update.
-     * @param customerRequestDTO  The data to update the customer with.
-     * @return The response DTO containing the updated fields of the customer.
-     */
     public CustomerUpdateResponseDTO updateCustomer(int customerId, CustomerUpdateRequestDTO customerRequestDTO) {
+        log.debug("Updating customer with ID: {} with data: {}", customerId, customerRequestDTO);
+
         Customer customer = findCustomerById(customerId);
         Map<String, Object> updatedFields = updateCustomerFields(customer, customerRequestDTO);
         customerRepository.save(customer);
+
+        log.info("Customer with ID: {} updated successfully. Updated fields: {}", customerId, updatedFields);
+
         return new CustomerUpdateResponseDTO(HttpStatus.OK.value(), customerId, updatedFields, "Customer with id: " + customerId + " updated successfully");
     }
 
-    /**
-     * Deletes a customer by their ID.
-     *
-     * @param customerId The ID of the customer to delete.
-     * @return The response DTO confirming the deletion.
-     */
     public CustomerDeleteResponseDTO deleteCustomer(int customerId) {
+        log.debug("Attempting to delete customer with ID: {}", customerId);
+
         Customer customer = findCustomerById(customerId);
-        validateCustomerDeletion(customer);
-        customerRepository.delete(customer);
-        return new CustomerDeleteResponseDTO(HttpStatus.OK.value(), customerId, "Customer with id: " + customerId + " deleted successfully");
+        try {
+            validateCustomerDeletion(customer);
+            customerRepository.delete(customer);
+
+            log.info("Customer with ID: {} deleted successfully", customerId);
+            return new CustomerDeleteResponseDTO(HttpStatus.OK.value(), customerId, "Customer with id: " + customerId + " deleted successfully");
+        } catch (InvalidCustomerDeleteReqeustException e) {
+            log.warn("Customer with ID: {} cannot be deleted: {}", customerId, e.getMessage());
+            throw e; // Re-throw to propagate the error
+        }
     }
 
-    /**
-     * Finds a customer by their ID.
-     *
-     * @param customerId The ID of the customer to find.
-     * @return The found customer.
-     * @throws CustomerNotFoundException if the customer is not found.
-     */
     private Customer findCustomerById(int customerId) {
+        log.debug("Finding customer by ID: {}", customerId);
+
         return customerRepository.findById(customerId)
-                .orElseThrow(() -> new CustomerNotFoundException("Customer with id: " + customerId + " not found"));
+                .orElseThrow(() -> {
+                    log.error("Customer with ID: {} not found", customerId);
+                    return new CustomerNotFoundException("Customer with id: " + customerId + " not found");
+                });
     }
 
-    /**
-     * Maps a CustomerRequestDTO to a Customer entity.
-     *
-     * @param customerRequestDTO The DTO to map.
-     * @return The mapped Customer entity.
-     */
     private Customer mapToCustomer(CustomerRequestDTO customerRequestDTO) {
+        // No logging needed here as this is a simple mapping method
         Customer customer = new Customer();
         customer.setName(customerRequestDTO.name());
         customer.setLegalId(customerRequestDTO.legalId());
@@ -118,15 +111,8 @@ public class CustomerService {
         return customer;
     }
 
-    /**
-     * Maps a Customer entity to a CustomerResponseDTO.
-     *
-     * @param customer The customer entity to map.
-     * @param statusCode The HTTP status code for the response.
-     * @param message The message to include in the response.
-     * @return The mapped CustomerResponseDTO.
-     */
     private CustomerResponseDTO mapToCustomerResponseDTO(Customer customer, int statusCode, String message) {
+        // No logging needed here as this is a simple mapping method
         return new CustomerResponseDTO(
                 statusCode,
                 customer.getCustomerId(),
@@ -142,14 +128,9 @@ public class CustomerService {
         );
     }
 
-    /**
-     * Updates the fields of a Customer entity based on the provided DTO.
-     *
-     * @param customer The customer to update.
-     * @param customerRequestDTO The DTO containing the new data.
-     * @return A map of updated fields.
-     */
     private Map<String, Object> updateCustomerFields(Customer customer, CustomerUpdateRequestDTO customerRequestDTO) {
+        log.debug("Updating fields of customer with ID: {}", customer.getCustomerId());
+
         Map<String, Object> updatedFields = new HashMap<>();
 
         if (customerRequestDTO.name() != null && !Objects.equals(customer.getName(), customerRequestDTO.name())) {
@@ -181,18 +162,17 @@ public class CustomerService {
             updatedFields.put("customerStatus", customerRequestDTO.customerStatus());
         }
 
+        log.debug("Updated fields for customer with ID: {}: {}", customer.getCustomerId(), updatedFields);
         return updatedFields;
     }
 
-    /**
-     * Validates if a customer can be deleted.
-     *
-     * @param customer The customer to validate.
-     * @throws InvalidCustomerDeleteReqeustException if the customer cannot be deleted.
-     */
     private void validateCustomerDeletion(Customer customer) {
+        log.debug("Validating if customer with ID: {} can be deleted", customer.getCustomerId());
+
         if (customer.getNumberOfAccounts() > 0) {
+            log.warn("Customer with ID: {} has accounts and cannot be deleted", customer.getCustomerId());
             throw new InvalidCustomerDeleteReqeustException("Customer with id: " + customer.getCustomerId() + " has accounts and cannot be deleted");
         }
     }
 }
+

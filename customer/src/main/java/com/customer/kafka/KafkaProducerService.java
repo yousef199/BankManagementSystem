@@ -3,6 +3,10 @@ package com.customer.kafka;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author YQadous
+ * Kafka producer service
+ */
 @Service
 public class KafkaProducerService {
 
