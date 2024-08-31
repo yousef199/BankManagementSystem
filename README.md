@@ -94,6 +94,12 @@ Ensure that PostgreSQL is running and the necessary databases (customer , accoun
 - PostgreSQL
 - Flyway
 - OpenAPI (for API documentation)
+- Apache Maven
+- Apache Kafka
+- Docker
+- Micrometer
+- Zipkin
+- Lombok
 
 ## Development
 
@@ -104,10 +110,11 @@ Ensure that PostgreSQL is running and the necessary databases (customer , accoun
 
 ## Testing
 
-- Implement unit tests for each service
-- Create integration tests to verify inter-service communication
-- Test API endpoints using tools like Postman or curl
+both account and customer service have been fully unit tested with over 80% code coverage.
+both account and customer controller have been tested with integration tests.
+
 
 ## Deployment
-
-Instructions for deploying the microservices will depend on your target environment (e.g., Docker, Kubernetes, cloud platforms).
+all services contain docker files to build an image and deploy the service in a container.
+the docker-compose file is also provided to deploy all services in a single command as of now the docker compose file contains
+the kafka , zookeeper , postgresql and zipkin images.

@@ -6,6 +6,8 @@ import com.account.repository.AccountRepository;
 import com.clients.account.dto.*;
 import com.clients.customer.CustomerClient;
 import com.clients.customer.dto.CustomerResponseDTO;
+import com.clients.customer.dto.KafkaCustomerDeleteDTO;
+import com.clients.customer.dto.KafkaCustomerUpdateDTO;
 import com.clients.dto.GeneralResponseDTO;
 import com.common.enums.AccountStatus;
 import com.common.enums.AccountTypes;
@@ -309,5 +311,24 @@ public class AccountService {
                 account.getAccountStatus(),
                 message
         );
+    }
+
+    public void handleUpdateCustomerEvent(KafkaCustomerUpdateDTO kafkaCustomerUpdateDTO) {
+        // Check if the updated fields contain customer status
+        if (kafkaCustomerUpdateDTO.updatedFields().containsKey("customerStatus")) {
+            String newStatus = kafkaCustomerUpdateDTO.updatedFields().get("customerStatus").toString();
+
+            // Update account status based on new customer status
+            if (CustomerStatus.INACTIVE.getStatus().equals(newStatus)) {
+                accountRepository.updateAccountStatusByCustomerId(kafkaCustomerUpdateDTO.customerId(), AccountStatus.INACTIVE.getStatus());
+            } else if (CustomerStatus.ACTIVE.getStatus().equals(newStatus)) {
+                accountRepository.updateAccountStatusByCustomerId(kafkaCustomerUpdateDTO.customerId(), AccountStatus.ACTIVE.getStatus());
+            }
+        }
+    }
+
+    // if a customer is deleted, all accounts associated with that customer should be deleted
+    public void handleDeleteCustomerEvent(KafkaCustomerDeleteDTO kafkaCustomerDeleteDTO) {
+        accountRepository.deleteAccountsByCustomerId(kafkaCustomerDeleteDTO.customerId());
     }
 }

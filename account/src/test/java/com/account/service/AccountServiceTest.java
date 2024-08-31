@@ -6,6 +6,7 @@ import com.account.repository.AccountRepository;
 import com.clients.account.dto.*;
 import com.clients.customer.CustomerClient;
 import com.clients.customer.dto.CustomerResponseDTO;
+import com.clients.customer.dto.KafkaCustomerUpdateDTO;
 import com.clients.dto.GeneralResponseDTO;
 import com.common.enums.AccountStatus;
 import com.common.enums.AccountTypes;
@@ -266,5 +267,50 @@ class AccountServiceTest {
         // When / Then
         assertThrows(AccountNotFoundException.class, () -> accountService.deleteAccount(accountId));
         verify(accountRepository, never()).delete(any(Account.class));
+    }
+
+    @Test
+    void testHandleUpdateCustomerEvent_SetAccountsToInactive_WhenCustomerStatusIsChangedToInactive() {
+        // Given
+        int customerId = 1000000;
+        Map<String, Object> updatedFields = new HashMap<>();
+        updatedFields.put("customerStatus", CustomerStatus.INACTIVE.getStatus());
+        KafkaCustomerUpdateDTO kafkaCustomerUpdateDTO = new KafkaCustomerUpdateDTO(customerId, updatedFields);
+
+        // When
+        accountService.handleUpdateCustomerEvent(kafkaCustomerUpdateDTO);
+
+        // Then
+        verify(accountRepository).updateAccountStatusByCustomerId(customerId, AccountStatus.INACTIVE.getStatus());
+    }
+
+    @Test
+    void testHandleUpdateCustomerEvent_SetAccountsToActive_WhenCustomerStatusIsChangedToActive() {
+        // Given
+        int customerId = 1000000;
+        Map<String, Object> updatedFields = new HashMap<>();
+        updatedFields.put("customerStatus", CustomerStatus.ACTIVE.getStatus());
+        KafkaCustomerUpdateDTO kafkaCustomerUpdateDTO = new KafkaCustomerUpdateDTO(customerId, updatedFields);
+
+        // When
+        accountService.handleUpdateCustomerEvent(kafkaCustomerUpdateDTO);
+
+        // Then
+        verify(accountRepository).updateAccountStatusByCustomerId(customerId, AccountStatus.ACTIVE.getStatus());
+    }
+
+    @Test
+    void testHandleUpdateCustomerEvent_DoNothing_WhenCustomerStatusIsNotChanged() {
+        // Given
+        int customerId = 1000000;
+        Map<String, Object> updatedFields = new HashMap<>();
+        updatedFields.put("name", "New Name");
+        KafkaCustomerUpdateDTO kafkaCustomerUpdateDTO = new KafkaCustomerUpdateDTO(customerId, updatedFields);
+
+        // When
+        accountService.handleUpdateCustomerEvent(kafkaCustomerUpdateDTO);
+
+        // Then
+        verify(accountRepository, never()).updateAccountStatusByCustomerId(anyInt(), anyString());
     }
 }
