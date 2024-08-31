@@ -21,7 +21,7 @@ import org.springframework.http.HttpStatus;
 import java.util.*;
 
 @ExtendWith(MockitoExtension.class)
-public class CustomerServiceTest {
+class CustomerServiceTest {
 
     @Mock
     private CustomerRepository customerRepository;
