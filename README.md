@@ -100,7 +100,7 @@ Ensure that PostgreSQL is running and the necessary databases (customer , accoun
 - Micrometer
 - Zipkin
 - Lombok
-  ![Alt text](images/SonarAnalysis.png)
+
 ### Screenshots from the application
 
 #### sonarqube report
