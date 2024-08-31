@@ -24,9 +24,6 @@ public class AccountController {
     private final KafkaProducerService kafkaProducerService;
 
     @PostMapping("/registerAccount")
-    @Observed(name = "account.register",
-            contextualName = "register-account",
-            lowCardinalityKeyValues = {"operation", "registerAccount"})
     public ResponseEntity<AccountResponseDTO> createAccount(@Valid @RequestBody AccountRequestDTO accountRequestDTO) {
         AccountResponseDTO accountResponseDTO = accountService.createAccount(accountRequestDTO);
         KafkaNewAccountDTO kafkaNewAccountDTO = new KafkaNewAccountDTO(accountResponseDTO.accountId(), accountResponseDTO.customerId() , accountResponseDTO.accountType() , accountResponseDTO.accountStatus());
