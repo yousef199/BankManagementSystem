@@ -2,13 +2,17 @@ package com.customer.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "Customer")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Customer {
 
     @Id

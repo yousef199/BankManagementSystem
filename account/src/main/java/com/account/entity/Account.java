@@ -4,7 +4,9 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -13,6 +15,8 @@ import java.math.BigDecimal;
 @Table(name = "Account")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Account {
     @Id
     @Column(name = "account_id", length = 10, nullable = false)

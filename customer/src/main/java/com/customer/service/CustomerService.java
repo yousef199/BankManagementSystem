@@ -116,6 +116,7 @@ public class CustomerService {
         );
     }
 
+    //TODO: check if the customer has any accounts before deleting if so dont delete
     public GeneralResponseDTO deleteCustomer(int customerId) {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException("Customer with id: " + customerId + " not found"));

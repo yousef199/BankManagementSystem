@@ -70,4 +70,34 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(CannotActivateAccountException.class)
+    public ResponseEntity<ErrorResponseDTO> handleCannotActivateAccount(CannotActivateAccountException ex) {
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                "Cannot activate account"
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CustomerIdMustBeProvided.class)
+    public ResponseEntity<ErrorResponseDTO> handleCustomerIdMustBeProvided(CustomerIdMustBeProvided ex) {
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                "Customer id must be provided"
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidAccountTransferRequest.class)
+    public ResponseEntity<ErrorResponseDTO> handleInvalidAccountTransferRequest(InvalidAccountTransferRequest ex) {
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                "Invalid account transfer request"
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 }
