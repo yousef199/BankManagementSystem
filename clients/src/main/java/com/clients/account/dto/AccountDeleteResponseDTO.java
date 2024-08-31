@@ -1,11 +1,8 @@
 package com.clients.account.dto;
 
-import java.util.Map;
-
-public record AccountUpdateResponseDTO(
+public record AccountDeleteResponseDTO(
         int statusCode,
         int customerId,
-        Map<String, Object> updatedFields,
         String message
 ) {
 }

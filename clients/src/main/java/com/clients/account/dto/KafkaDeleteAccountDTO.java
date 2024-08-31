@@ -1,4 +1,7 @@
 package com.clients.account.dto;
 
-public class KafkaDeleteAccountDTO {
+public record KafkaDeleteAccountDTO (
+        int accountId,
+        int customerId
+){
 }

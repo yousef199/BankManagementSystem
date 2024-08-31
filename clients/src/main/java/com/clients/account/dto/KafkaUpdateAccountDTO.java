@@ -1,4 +1,10 @@
 package com.clients.account.dto;
 
-public class KafkaUpdateAccountDTO {
+import java.util.Map;
+
+public record KafkaUpdateAccountDTO (
+        int accountId,
+        int customerId,
+        Map<String, Object> updatedFields
+){
 }

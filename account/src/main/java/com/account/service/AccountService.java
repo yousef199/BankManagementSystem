@@ -3,10 +3,7 @@ package com.account.service;
 import com.account.entity.Account;
 import com.account.exception.*;
 import com.account.repository.AccountRepository;
-import com.clients.account.dto.AccountRequestDTO;
-import com.clients.account.dto.AccountResponseDTO;
-import com.clients.account.dto.AccountUpdateRequestDTO;
-import com.clients.account.dto.AccountUpdateResponseDTO;
+import com.clients.account.dto.*;
 import com.clients.customer.CustomerClient;
 import com.clients.customer.dto.CustomerResponseDTO;
 import com.clients.dto.GeneralResponseDTO;
@@ -121,6 +118,7 @@ public class AccountService {
 
         return new AccountUpdateResponseDTO(
                 HttpStatus.OK.value(),
+                account.getCustomerId(),
                 updatedFields,
                 "Account with id " + accountId + " updated successfully"
         );
@@ -134,14 +132,15 @@ public class AccountService {
      * @throws AccountNotFoundException if the account does not exist
      */
     @Transactional
-    public GeneralResponseDTO deleteAccount(int accountId) {
+    public AccountDeleteResponseDTO deleteAccount(int accountId) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new AccountNotFoundException("Account with id " + accountId + " not found."));
 
         accountRepository.delete(account);
 
-        return new GeneralResponseDTO(
+        return new AccountDeleteResponseDTO(
                 HttpStatus.OK.value(),
+                account.getCustomerId(),
                 "Account with id " + accountId + " deleted successfully"
         );
     }

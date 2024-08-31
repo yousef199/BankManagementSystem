@@ -51,12 +51,16 @@ public class AccountController {
     @PutMapping("/{accountId}")
     public ResponseEntity<AccountUpdateResponseDTO> updateAccount(@PathVariable int accountId, @RequestBody AccountUpdateRequestDTO accountUpdateRequestDTO) {
         AccountUpdateResponseDTO responseDTO = accountService.updateAccount(accountId, accountUpdateRequestDTO);
+        KafkaUpdateAccountDTO kafkaUpdateAccountDTO = new KafkaUpdateAccountDTO(accountId , responseDTO.customerId() , responseDTO.updatedFields());
+        kafkaProducerService.sendMessage(TopicNames.ACCOUNT_UPDATE.getTopicName(), kafkaUpdateAccountDTO);
         return ResponseEntity.ok(responseDTO);
     }
 
     @DeleteMapping("/{accountId}")
-    public ResponseEntity<GeneralResponseDTO> deleteAccount(@PathVariable int accountId) {
-        GeneralResponseDTO responseDTO = accountService.deleteAccount(accountId);
+    public ResponseEntity<AccountDeleteResponseDTO> deleteAccount(@PathVariable int accountId) {
+        AccountDeleteResponseDTO responseDTO = accountService.deleteAccount(accountId);
+        KafkaDeleteAccountDTO kafkaDeleteAccountDTO = new KafkaDeleteAccountDTO(accountId , responseDTO.customerId());
+        kafkaProducerService.sendMessage(TopicNames.ACCOUNT_DELETE.getTopicName(), kafkaDeleteAccountDTO);
         return ResponseEntity.ok(responseDTO);
     }
 }

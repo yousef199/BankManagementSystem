@@ -3,10 +3,7 @@ package com.account.service;
 import com.account.entity.Account;
 import com.account.exception.*;
 import com.account.repository.AccountRepository;
-import com.clients.account.dto.AccountRequestDTO;
-import com.clients.account.dto.AccountResponseDTO;
-import com.clients.account.dto.AccountUpdateRequestDTO;
-import com.clients.account.dto.AccountUpdateResponseDTO;
+import com.clients.account.dto.*;
 import com.clients.customer.CustomerClient;
 import com.clients.customer.dto.CustomerResponseDTO;
 import com.clients.dto.GeneralResponseDTO;
@@ -403,10 +400,10 @@ class AccountServiceTest {
         when(accountRepository.findById(anyInt())).thenReturn(Optional.of(account));
 
         // When
-        GeneralResponseDTO responseDTO = accountService.deleteAccount(accountId);
+        AccountDeleteResponseDTO responseDTO = accountService.deleteAccount(accountId);
 
         // Then
-        assertEquals(HttpStatus.OK.value(), responseDTO.httpStatus());
+        assertEquals(HttpStatus.OK.value(), responseDTO.statusCode());
         assertEquals("Account with id "+accountId+" deleted successfully", responseDTO.message());
         verify(accountRepository, times(1)).delete(any(Account.class));
     }
