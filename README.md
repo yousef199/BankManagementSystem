@@ -83,9 +83,10 @@ BankManagementSystem/
 3. Start the Customer Service
 4. Start the Account Service
 
+Ensure that PostgreSQL is running and the necessary databases (customer , account) are created before starting the services.
+
 ### Postman Collection
 you can find the postman collection in the root directory of the project. under the name `BankManagementSystem.postman_collection.json`
-Ensure that PostgreSQL is running and the necessary databases (customer , account) are created before starting the services.
 
 ## Technologies Used
 
