@@ -17,20 +17,20 @@ public class KafkaConsumerService {
 
     @KafkaListener(topics = {"account.new"})
     public void newCustomerEvent(KafkaNewAccountDTO kafkaNewAccountDTO) {
-        log.info("consumed account created event: {}", kafkaNewAccountDTO);
+        log.debug("consumed account created event: {}", kafkaNewAccountDTO);
         customerService.handleNewAccountEvent(kafkaNewAccountDTO);
     }
 
 
     @KafkaListener(topics = {"account.update"})
     public void updateCustomerEvent(KafkaUpdateAccountDTO kafkaUpdateAccountDTO) {
-        log.info("consumed account updated event: {}", kafkaUpdateAccountDTO);
+        log.debug("consumed account updated event: {}", kafkaUpdateAccountDTO);
     }
 
 
     @KafkaListener(topics = {"account.delete"})
     public void deleteCustomerEvent(KafkaDeleteAccountDTO kafkaDeleteAccountDTO) {
-        log.info("consumed account deleted event: {}", kafkaDeleteAccountDTO);
+        log.debug("consumed account deleted event: {}", kafkaDeleteAccountDTO);
         customerService.handleDeleteAccountEvent(kafkaDeleteAccountDTO);
     }
 }

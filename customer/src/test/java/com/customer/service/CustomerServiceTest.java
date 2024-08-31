@@ -5,7 +5,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import com.clients.account.AccountClient;
+import com.clients.account.dto.KafkaDeleteAccountDTO;
+import com.clients.account.dto.KafkaNewAccountDTO;
 import com.clients.customer.dto.*;
+import com.common.enums.AccountStatus;
+import com.common.enums.AccountTypes;
 import com.common.enums.CustomerStatus;
 import com.customer.entity.Customer;
 import com.customer.exception.CustomerNotFoundException;
@@ -284,4 +288,45 @@ class CustomerServiceTest {
         verify(customerRepository, times(1)).findById(1000000);
         verify(customerRepository, never()).delete(any(Customer.class));
     }
+
+    @Test
+    void shouldIncrementNumberOfAccountsWhenNewAccountEventReceived() {
+        // Given
+        KafkaNewAccountDTO kafkaNewAccountDTO = new KafkaNewAccountDTO(1000000123,
+                1000000,
+                AccountTypes.SAVINGS.getType(),
+                AccountStatus.ACTIVE.getStatus()); // Assuming KafkaNewAccountDTO has a constructor with customerId
+        Customer customer = new Customer();
+        customer.setCustomerId(1000000);
+        customer.setNumberOfAccounts(1);
+
+        when(customerRepository.findById(1000000)).thenReturn(Optional.of(customer));
+
+        // When
+        customerService.handleNewAccountEvent(kafkaNewAccountDTO);
+
+        // Then
+        assertEquals(2, customer.getNumberOfAccounts());
+        verify(customerRepository, times(1)).save(customer);
+    }
+
+    @Test
+    void shouldDecrementNumberOfAccountsWhenDeleteAccountEventReceived() {
+        // Given
+        KafkaDeleteAccountDTO kafkaDeleteAccountDTO = new KafkaDeleteAccountDTO(1000000123,
+                1000000); // Assuming KafkaDeleteAccountDTO has a constructor with customerId
+        Customer customer = new Customer();
+        customer.setCustomerId(1000000);
+        customer.setNumberOfAccounts(1);
+
+        when(customerRepository.findById(1000000)).thenReturn(Optional.of(customer));
+
+        // When
+        customerService.handleDeleteAccountEvent(kafkaDeleteAccountDTO);
+
+        // Then
+        assertEquals(0, customer.getNumberOfAccounts());
+        verify(customerRepository, times(1)).save(customer);
+    }
+
 }

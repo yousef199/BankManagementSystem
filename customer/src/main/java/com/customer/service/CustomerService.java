@@ -1,6 +1,8 @@
 package com.customer.service;
 
 import com.clients.account.AccountClient;
+import com.clients.account.dto.KafkaDeleteAccountDTO;
+import com.clients.account.dto.KafkaNewAccountDTO;
 import com.clients.customer.dto.*;
 import com.customer.entity.Customer;
 import com.customer.exception.CustomerNotFoundException;
@@ -173,6 +175,23 @@ public class CustomerService {
             log.warn("Customer with ID: {} has accounts and cannot be deleted", customer.getCustomerId());
             throw new InvalidCustomerDeleteReqeustException("Customer with id: " + customer.getCustomerId() + " has accounts and cannot be deleted");
         }
+    }
+
+    // we assume that the account microservice will check for the max number of customers before creating a new one
+    public void handleNewAccountEvent(KafkaNewAccountDTO kafkaNewAccountDTO) {
+        customerRepository.findById(kafkaNewAccountDTO.customerId())
+                .ifPresent(customer -> {
+                    customer.setNumberOfAccounts(customer.getNumberOfAccounts() + 1);
+                    customerRepository.save(customer);
+                });
+    }
+
+    public void handleDeleteAccountEvent(KafkaDeleteAccountDTO kafkaDeleteAccountDTO) {
+        customerRepository.findById(kafkaDeleteAccountDTO.customerId())
+                .ifPresent(customer -> {
+                    customer.setNumberOfAccounts(customer.getNumberOfAccounts() - 1);
+                    customerRepository.save(customer);
+                });
     }
 }
 
