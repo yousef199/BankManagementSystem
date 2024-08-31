@@ -57,7 +57,7 @@ class AccountControllerTest {
     public void setUp() {
         accountRequestDTO = new AccountRequestDTO(1000000, new BigDecimal(99), AccountTypes.SAVINGS.getType(), AccountStatus.ACTIVE.getStatus());
         accountResponseDTO = new AccountResponseDTO(HttpStatus.OK.value() , accountId , customerId , new BigDecimal(99), AccountTypes.SAVINGS.getType(), AccountStatus.ACTIVE.getStatus(), "message");
-        accountUpdateRequestDTO = new AccountUpdateRequestDTO(1000000, new BigDecimal(99), AccountTypes.SAVINGS.getType(), AccountStatus.ACTIVE.getStatus());
+        accountUpdateRequestDTO = new AccountUpdateRequestDTO(new BigDecimal(99), AccountTypes.SAVINGS.getType(), AccountStatus.ACTIVE.getStatus());
         accountUpdateResponseDTO = new AccountUpdateResponseDTO(HttpStatus.OK.value() , customerId , new HashMap<>(Collections.singletonMap("field", "value")) , "message");
         accountDeleteResponseDTO = new AccountDeleteResponseDTO(HttpStatus.OK.value() , customerId , "message");
     }

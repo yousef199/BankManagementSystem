@@ -6,7 +6,8 @@ public enum TopicNames {
     CUSTOMER_DELETE("customer.delete"),
     ACCOUNT_NEW("account.new"),
     ACCOUNT_UPDATE("account.update"),
-    ACCOUNT_DELETE("account.delete");
+    ACCOUNT_DELETE("account.delete"),
+    ACCOUNT_TRANSFER("account.transfer");
 
     private final String topicName;
 

@@ -167,7 +167,7 @@ class AccountServiceTest {
         int customerId = 1000000;
         int accountId = 1000000123;
         // Given
-        AccountUpdateRequestDTO updateRequestDTO = new AccountUpdateRequestDTO(null, BigDecimal.valueOf(2000), AccountTypes.INVESTMENT.getType(), AccountStatus.ACTIVE.getStatus());
+        AccountUpdateRequestDTO updateRequestDTO = new AccountUpdateRequestDTO(BigDecimal.valueOf(2000), AccountTypes.INVESTMENT.getType(), AccountStatus.ACTIVE.getStatus());
         CustomerResponseDTO customerResponseDTO = new CustomerResponseDTO(HttpStatus.OK.value(),customerId , "John",
                 "122333" ,
                 CustomerTypes.CORPORATE.getType(),
@@ -196,162 +196,11 @@ class AccountServiceTest {
     }
 
     @Test
-    void transferAccount_success() {
-        int oldCustomerId = 1000000;
-        int newCustomerId = 1000001;
-        int accountId = 1000000123;
-        // Given
-        AccountUpdateRequestDTO updateRequestDTO = new AccountUpdateRequestDTO(newCustomerId, BigDecimal.valueOf(2000), AccountTypes.INVESTMENT.getType(), AccountStatus.ACTIVE.getStatus());
-        Account existingAccount = new Account(accountId, oldCustomerId, BigDecimal.valueOf(1000), AccountTypes.SAVINGS.getType(), AccountStatus.INACTIVE.getStatus());
-        CustomerResponseDTO newCustomerResponseDto = new CustomerResponseDTO(HttpStatus.OK.value(), newCustomerId , "John",
-                "122333" ,
-                CustomerTypes.CORPORATE.getType(),
-                "Jordan" ,
-                "0780709088" ,
-                "John@gmail.com",
-                1,
-                CustomerStatus.ACTIVE.getStatus(),
-                "Customer found successfully");
-        when(accountRepository.findById(anyInt())).thenReturn(Optional.of(existingAccount));
-        when(accountRepository.save(any(Account.class))).thenReturn(existingAccount);
-        when(customerClient.getCustomer(newCustomerId)).thenReturn(ResponseEntity.ok(newCustomerResponseDto));
-
-        // When
-        AccountUpdateResponseDTO responseDTO = accountService.updateAccount(accountId, updateRequestDTO);
-
-        // Then
-        assertEquals(HttpStatus.OK.value(), responseDTO.statusCode());
-        assertEquals(4, responseDTO.updatedFields().size());
-        assertEquals(AccountStatus.ACTIVE.getStatus(), responseDTO.updatedFields().get("accountStatus"));
-        assertEquals(AccountTypes.INVESTMENT.getType(), responseDTO.updatedFields().get("accountType"));
-        assertTrue(responseDTO.updatedFields().containsKey("balance"));
-        assertEquals(BigDecimal.valueOf(2000), responseDTO.updatedFields().get("balance"));
-        verify(accountRepository, times(1)).save(any(Account.class));
-    }
-
-    @Test
-    void transferAccount_unsuccessful_newCustomerInactive() {
-        int oldCustomerId = 1000000;
-        int newCustomerId = 1000001;
-        int accountId = 1000000123;
-        // Given
-        AccountUpdateRequestDTO updateRequestDTO = new AccountUpdateRequestDTO(newCustomerId, BigDecimal.valueOf(2000), AccountTypes.INVESTMENT.getType(), AccountStatus.ACTIVE.getStatus());
-        Account existingAccount = new Account(accountId, oldCustomerId, BigDecimal.valueOf(1000), AccountTypes.SAVINGS.getType(), AccountStatus.INACTIVE.getStatus());
-        CustomerResponseDTO newCustomerResponseDto = new CustomerResponseDTO(HttpStatus.OK.value(), newCustomerId , "John",
-                "122333" ,
-                CustomerTypes.CORPORATE.getType(),
-                "Jordan" ,
-                "0780709088" ,
-                "John@gmail.com",
-                1,
-                CustomerStatus.INACTIVE.getStatus(),
-                "Customer found successfully");
-        when(accountRepository.findById(anyInt())).thenReturn(Optional.of(existingAccount));
-        when(customerClient.getCustomer(newCustomerId)).thenReturn(ResponseEntity.ok(newCustomerResponseDto));
-
-        // When / Then
-        assertThrows(InvalidAccountTransferRequest.class, () -> {
-            // when
-            accountService.updateAccount(accountId, updateRequestDTO);
-        });
-    }
-
-    @Test
-    void transferAccount_unsuccessful_newCustomerHasSalaryAccount() {
-        int newCustomerId = 1000001;
-        int oldCustomerId = 1000000;
-        int accountId = 1000000123;
-        List<Account> accountList = new ArrayList<>();
-        // Given
-        AccountUpdateRequestDTO updateRequestDTO = new AccountUpdateRequestDTO(newCustomerId, BigDecimal.valueOf(2000), AccountTypes.SALARY.getType(), AccountStatus.ACTIVE.getStatus());
-        Account existingAccount = new Account(accountId, oldCustomerId, BigDecimal.valueOf(1000), AccountTypes.SAVINGS.getType(), AccountStatus.INACTIVE.getStatus());
-        Account newCustomerExistingSalaryAccount = new Account(1000000124, newCustomerId, BigDecimal.valueOf(1000), AccountTypes.SALARY.getType(), AccountStatus.ACTIVE.getStatus());
-        CustomerResponseDTO newCustomerResponseDto = new CustomerResponseDTO(HttpStatus.OK.value(), newCustomerId , "John",
-                "122333" ,
-                CustomerTypes.CORPORATE.getType(),
-                "Jordan" ,
-                "0780709088" ,
-                "John@gmail.com",
-                1,
-                CustomerStatus.ACTIVE.getStatus(),
-                "Customer found successfully");
-        accountList.add(newCustomerExistingSalaryAccount);
-        when(accountRepository.findById(anyInt())).thenReturn(Optional.of(existingAccount));
-        when(customerClient.getCustomer(newCustomerId)).thenReturn(ResponseEntity.ok(newCustomerResponseDto));
-        when(accountRepository.findByCustomerId(newCustomerId)).thenReturn(accountList);
-
-        // When / Then
-        assertThrows(InvalidAccountTransferRequest.class, () -> {
-            // when
-            accountService.updateAccount(accountId, updateRequestDTO);
-        });
-    }
-
-    @Test
-    void transferAccount_unsuccessful_newCustomerHasMaxAccounts() {
-        int oldCustomerId = 1000000;
-        int newCustomerId = 1000001;
-        int accountId = 1000000123;
-        // Given
-        AccountUpdateRequestDTO updateRequestDTO = new AccountUpdateRequestDTO(newCustomerId, BigDecimal.valueOf(2000), AccountTypes.INVESTMENT.getType(), AccountStatus.ACTIVE.getStatus());
-        Account existingAccount = new Account(accountId, oldCustomerId, BigDecimal.valueOf(1000), AccountTypes.SAVINGS.getType(), AccountStatus.INACTIVE.getStatus());
-        CustomerResponseDTO newCustomerResponseDto = new CustomerResponseDTO(HttpStatus.OK.value(), newCustomerId , "John",
-                "122333" ,
-                CustomerTypes.CORPORATE.getType(),
-                "Jordan" ,
-                "0780709088" ,
-                "John@gmail.com",
-                10,
-                CustomerStatus.ACTIVE.getStatus(),
-                "Customer found successfully");
-        when(accountRepository.findById(anyInt())).thenReturn(Optional.of(existingAccount));
-        when(customerClient.getCustomer(newCustomerId)).thenReturn(ResponseEntity.ok(newCustomerResponseDto));
-
-        // When / Then
-        assertThrows(InvalidAccountTransferRequest.class, () -> {
-            // when
-            accountService.updateAccount(accountId, updateRequestDTO);
-        });
-    }
-
-    @Test
-    void transferAccount_sameCustomerId_throwsInvalidAccountTransferRequest() {
-        // Given
-        int customerId = 1000000;
-        int accountId = 1000000123;
-        AccountUpdateRequestDTO updateRequestDTO = new AccountUpdateRequestDTO(customerId, BigDecimal.valueOf(2000), AccountTypes.INVESTMENT.getType(), AccountStatus.ACTIVE.getStatus());
-        Account existingAccount = new Account(accountId, customerId, BigDecimal.valueOf(1000), AccountTypes.SAVINGS.getType(), AccountStatus.INACTIVE.getStatus());
-        when(accountRepository.findById(anyInt())).thenReturn(Optional.of(existingAccount));
-        // Then
-        assertThrows(InvalidAccountTransferRequest.class, () -> {
-            // when
-            accountService.updateAccount(accountId, updateRequestDTO);
-        });
-    }
-
-    @Test
-    void transferAcccount_newCustomerDoesntExist_throwsInvalidAccountTransferRequest() {
-        // Given
-        int customerId = 1000000;
-        int newCustomerId = 1000001;
-        int accountId = 1000000123;
-        AccountUpdateRequestDTO updateRequestDTO = new AccountUpdateRequestDTO(newCustomerId, BigDecimal.valueOf(2000), AccountTypes.INVESTMENT.getType(), AccountStatus.ACTIVE.getStatus());
-        Account existingAccount = new Account(accountId, customerId, BigDecimal.valueOf(1000), AccountTypes.SAVINGS.getType(), AccountStatus.INACTIVE.getStatus());
-        when(accountRepository.findById(anyInt())).thenReturn(Optional.of(existingAccount));
-        when(customerClient.getCustomer(newCustomerId)).thenReturn(ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
-        // Then
-        assertThrows(InvalidAccountTransferRequest.class, () -> {
-            // when
-            accountService.updateAccount(accountId, updateRequestDTO);
-        });
-    }
-
-    @Test
     void updateAccount_inactiveCustomer_throwsCannotActivateAccountException() {
         int customerId = 1000000;
         int accountId = 1000000123;
         // Given
-        AccountUpdateRequestDTO updateRequestDTO = new AccountUpdateRequestDTO(null, BigDecimal.valueOf(2000), AccountTypes.INVESTMENT.getType(), AccountStatus.ACTIVE.getStatus());
+        AccountUpdateRequestDTO updateRequestDTO = new AccountUpdateRequestDTO(BigDecimal.valueOf(2000), AccountTypes.INVESTMENT.getType(), AccountStatus.ACTIVE.getStatus());
         CustomerResponseDTO customerResponseDTO = new CustomerResponseDTO(HttpStatus.OK.value(),customerId , "John",
                 "122333" ,
                 CustomerTypes.CORPORATE.getType(),
@@ -378,7 +227,7 @@ class AccountServiceTest {
         int accountId = 1000000123;
         List<Account> accountList = new ArrayList<>();
         // Given
-        AccountUpdateRequestDTO updateRequestDTO = new AccountUpdateRequestDTO(null, BigDecimal.valueOf(2000), AccountTypes.SALARY.getType(), AccountStatus.ACTIVE.getStatus());
+        AccountUpdateRequestDTO updateRequestDTO = new AccountUpdateRequestDTO(BigDecimal.valueOf(2000), AccountTypes.SALARY.getType(), AccountStatus.ACTIVE.getStatus());
         Account existingAccount = new Account(accountId, customerId, BigDecimal.valueOf(1000), AccountTypes.SALARY.getType(), AccountStatus.INACTIVE.getStatus());
         accountList.add(existingAccount);
         when(accountRepository.findById(anyInt())).thenReturn(Optional.of(existingAccount));

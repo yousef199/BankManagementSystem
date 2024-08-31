@@ -38,4 +38,14 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(InvalidCustomerDeleteReqeustException.class)
+    public ResponseEntity<ErrorResponseDTO> handleInvalidCustomerDeleteRequest(InvalidCustomerDeleteReqeustException ex) {
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                "Invalid customer delete request"
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
 }

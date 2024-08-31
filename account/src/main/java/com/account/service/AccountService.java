@@ -223,11 +223,7 @@ public class AccountService {
     private Map<String, Object> updateAccountFields(Account account, AccountUpdateRequestDTO accountUpdateRequestDTO) {
         Map<String, Object> updatedFields = new HashMap<>();
 
-        if (accountUpdateRequestDTO.customerId() != null) {
-            validateCustomerForAccountUpdate(account.getCustomerId(), accountUpdateRequestDTO);
-            account.setCustomerId(accountUpdateRequestDTO.customerId());
-            updatedFields.put("customerId", accountUpdateRequestDTO.customerId());
-        }
+
         if (accountUpdateRequestDTO.balance() != null) {
             account.setBalance(accountUpdateRequestDTO.balance());
             updatedFields.put("balance", accountUpdateRequestDTO.balance());
@@ -265,45 +261,6 @@ public class AccountService {
 
         if (accountRequestDTO.accountType().equalsIgnoreCase(AccountTypes.SALARY.getType())) {
             checkIfCustomerHasSalaryAccount(accountRequestDTO.customerId());
-        }
-    }
-
-    /**
-     * Validates the customer when updating an account.
-     *
-     * @param accountUpdateRequestDTO the account update request DTO
-     * @throws CustomerNotFoundException if the customer ID does not exist
-     * @throws SalaryAccountAlreadyExistsException if the customer already has a salary account and the account being updated is also a salary account
-     * @throws MaximumNumberOfAccountsReachedException if the customer has reached the maximum number of accounts
-     */
-    private void validateCustomerForAccountUpdate(Integer existingCustomerId, AccountUpdateRequestDTO accountUpdateRequestDTO) {
-        Integer newCustomerId = accountUpdateRequestDTO.customerId();
-
-        if (Objects.equals(existingCustomerId, newCustomerId)) {
-            throw new InvalidAccountTransferRequest("New Customer ID must be provided when transferring account ownership , the provided customer ID is the same as the existing customer ID");
-        }
-
-        // Check if the new customer ID exists
-        CustomerResponseDTO customerResponseDTO = customerClient.getCustomer(newCustomerId).getBody();
-        if (customerResponseDTO == null || customerResponseDTO.httpStatus() != HttpStatus.OK.value()) {
-            throw new InvalidAccountTransferRequest("Cannot Transfer Account to non Existing customer , Customer not found with id " + newCustomerId);
-        }
-
-        if (customerResponseDTO.customerStatus().equalsIgnoreCase(CustomerStatus.INACTIVE.getStatus())) {
-            throw new InvalidAccountTransferRequest("Cannot transfer account to inactive customer");
-        }
-        // Check if the customer already has a salary account if updating to a salary account
-        if ("SALARY".equalsIgnoreCase(accountUpdateRequestDTO.accountType())) {
-            boolean hasSalaryAccount = accountRepository.findByCustomerId(newCustomerId)
-                    .stream().anyMatch(acc -> "SALARY".equalsIgnoreCase(acc.getAccountType()));
-            if (hasSalaryAccount) {
-                throw new InvalidAccountTransferRequest("Customer to transfer account to already has a salary account");
-            }
-        }
-
-        // Check if the customer has reached the maximum number of accounts
-        if (customerResponseDTO.numberOfAccounts() >= 10) {
-            throw new InvalidAccountTransferRequest("Customer to transfer account to has reached the maximum number of accounts");
         }
     }
 

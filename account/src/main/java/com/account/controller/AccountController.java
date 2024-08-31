@@ -49,9 +49,9 @@ public class AccountController {
     }
 
     @PutMapping("/{accountId}")
-    public ResponseEntity<AccountUpdateResponseDTO> updateAccount(@PathVariable int accountId, @RequestBody AccountUpdateRequestDTO accountUpdateRequestDTO) {
+    public ResponseEntity<AccountUpdateResponseDTO> updateAccount(@PathVariable int accountId, @Valid @RequestBody AccountUpdateRequestDTO accountUpdateRequestDTO) {
         AccountUpdateResponseDTO responseDTO = accountService.updateAccount(accountId, accountUpdateRequestDTO);
-        KafkaUpdateAccountDTO kafkaUpdateAccountDTO = new KafkaUpdateAccountDTO(accountId , responseDTO.customerId() , responseDTO.updatedFields());
+        KafkaUpdateAccountDTO kafkaUpdateAccountDTO = new KafkaUpdateAccountDTO(accountId , responseDTO.customerId() ,responseDTO.updatedFields());
         kafkaProducerService.sendMessage(TopicNames.ACCOUNT_UPDATE.getTopicName(), kafkaUpdateAccountDTO);
         return ResponseEntity.ok(responseDTO);
     }

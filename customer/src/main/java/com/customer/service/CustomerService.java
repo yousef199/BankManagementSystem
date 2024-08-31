@@ -1,18 +1,21 @@
 package com.customer.service;
 
 import com.clients.account.AccountClient;
-import com.clients.customer.dto.CustomerRequestDTO;
-import com.clients.customer.dto.CustomerResponseDTO;
+import com.clients.customer.dto.*;
 import com.clients.dto.GeneralResponseDTO;
 import com.common.enums.CustomerStatus;
 import com.customer.entity.Customer;
 import com.customer.exception.CustomerNotFoundException;
+import com.customer.exception.InvalidCustomerDeleteReqeustException;
 import com.customer.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +24,6 @@ public class CustomerService {
     private final AccountClient accountClient;
 
     public CustomerResponseDTO createCustomer(CustomerRequestDTO customerRequestDTO) {
-        // Create a new Customer entity from DTO
         Customer customer = new Customer();
         customer.setName(customerRequestDTO.name());
         customer.setLegalId(customerRequestDTO.legalId());
@@ -29,7 +31,7 @@ public class CustomerService {
         customer.setAddress(customerRequestDTO.address());
         customer.setPhoneNumber(customerRequestDTO.phoneNumber());
         customer.setEmail(customerRequestDTO.email());
-        customer.setCustomerStatus(CustomerStatus.ACTIVE.getStatus()); // Default status for new customers
+        customer.setCustomerStatus(customerRequestDTO.customerStatus()); // Default status for new customers
         customer.setNumberOfAccounts(0); // Default number of accounts
 
         // Save customer in the repository
@@ -92,41 +94,71 @@ public class CustomerService {
         )).toList();
     }
 
-    public GeneralResponseDTO updateCustomer(int customerId, CustomerRequestDTO customerRequestDTO) {
+    public CustomerUpdateResponseDTO updateCustomer(int customerId, CustomerUpdateRequestDTO customerRequestDTO) {
         // Fetch the customer to update
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException("Customer with id: " + customerId + " not found"));
 
-        // Update customer details
-        customer.setName(customerRequestDTO.name());
-        customer.setLegalId(customerRequestDTO.legalId());
-        customer.setType(customerRequestDTO.type());
-        customer.setAddress(customerRequestDTO.address());
-        customer.setPhoneNumber(customerRequestDTO.phoneNumber());
-        customer.setEmail(customerRequestDTO.email());
-        customer.setCustomerStatus(customerRequestDTO.customerStatus()); // Update status
+        // Map to track updated fields
+        Map<String, Object> updatedFields = new HashMap<>();
+
+        // Check for non-null changes and update customer details
+        if (customerRequestDTO.name() != null && !Objects.equals(customer.getName(), customerRequestDTO.name())) {
+            customer.setName(customerRequestDTO.name());
+            updatedFields.put("name", customerRequestDTO.name());
+        }
+        if (customerRequestDTO.legalId() != null && !Objects.equals(customer.getLegalId(), customerRequestDTO.legalId())) {
+            customer.setLegalId(customerRequestDTO.legalId());
+            updatedFields.put("legalId", customerRequestDTO.legalId());
+        }
+        if (customerRequestDTO.type() != null && !Objects.equals(customer.getType(), customerRequestDTO.type())) {
+            customer.setType(customerRequestDTO.type());
+            updatedFields.put("type", customerRequestDTO.type());
+        }
+        if (customerRequestDTO.address() != null && !Objects.equals(customer.getAddress(), customerRequestDTO.address())) {
+            customer.setAddress(customerRequestDTO.address());
+            updatedFields.put("address", customerRequestDTO.address());
+        }
+        if (customerRequestDTO.phoneNumber() != null && !Objects.equals(customer.getPhoneNumber(), customerRequestDTO.phoneNumber())) {
+            customer.setPhoneNumber(customerRequestDTO.phoneNumber());
+            updatedFields.put("phoneNumber", customerRequestDTO.phoneNumber());
+        }
+        if (customerRequestDTO.email() != null && !Objects.equals(customer.getEmail(), customerRequestDTO.email())) {
+            customer.setEmail(customerRequestDTO.email());
+            updatedFields.put("email", customerRequestDTO.email());
+        }
+        if (customerRequestDTO.customerStatus() != null && !Objects.equals(customer.getCustomerStatus(), customerRequestDTO.customerStatus())) {
+            customer.setCustomerStatus(customerRequestDTO.customerStatus());
+            updatedFields.put("customerStatus", customerRequestDTO.customerStatus());
+        }
 
         // Save the updated customer
         customerRepository.save(customer);
 
         // Return response DTO
-        return new GeneralResponseDTO(
+        return new CustomerUpdateResponseDTO(
                 HttpStatus.OK.value(),
+                customerId,
+                updatedFields,
                 "Customer with id: " + customerId + " updated successfully"
         );
     }
 
-    //TODO: check if the customer has any accounts before deleting if so dont delete
-    public GeneralResponseDTO deleteCustomer(int customerId) {
+    public CustomerDeleteResponseDTO deleteCustomer(int customerId) {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new CustomerNotFoundException("Customer with id: " + customerId + " not found"));
 
+        // Check if customer has any accounts
+        if (customer.getNumberOfAccounts() > 0) {
+            throw new InvalidCustomerDeleteReqeustException("Customer with id: " + customerId + " has accounts and cannot be deleted");
+        }
         // Delete the customer
         customerRepository.delete(customer);
 
         // Return response DTO
-        return new GeneralResponseDTO(
+        return new CustomerDeleteResponseDTO(
                 HttpStatus.OK.value(),
+                customerId,
                 "Customer with id: " + customerId + " deleted successfully"
         );
     }
