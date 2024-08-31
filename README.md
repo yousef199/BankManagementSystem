@@ -111,7 +111,7 @@ Ensure that PostgreSQL is running and the necessary databases (customer , accoun
 #### Zipkin
 
 #### Eureka Server
-![Alt text](images/EurekaServer.png)
+![Alt text](images/EurekaServer.jpg)
 #### Kafka
 ![Alt text](images/Kafka.png)
 ## Development
