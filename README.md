@@ -101,6 +101,19 @@ Ensure that PostgreSQL is running and the necessary databases (customer , accoun
 - Zipkin
 - Lombok
 
+### Screenshots from the application
+
+#### sonarqube report
+![Alt text](images/SonarAnalysis.png)
+
+#### OpenApi and Swagger UI
+
+#### Zipkin
+
+#### Eureka Server
+
+#### Kafka
+
 ## Development
 
 - Follow proper code structure and best practices for Spring Boot applications
