@@ -2,9 +2,7 @@ package com.account.controller;
 
 import com.account.kafka.KafkaProducerService;
 import com.account.service.AccountService;
-import com.clients.account.dto.AccountRequestDTO;
-import com.clients.account.dto.AccountResponseDTO;
-import com.clients.account.dto.KafkaNewAccountDTO;
+import com.clients.account.dto.*;
 import com.clients.dto.GeneralResponseDTO;
 import com.common.enums.TopicNames;
 import jakarta.validation.Valid;
@@ -51,8 +49,8 @@ public class AccountController {
     }
 
     @PutMapping("/{accountId}")
-    public ResponseEntity<GeneralResponseDTO> updateAccount(@PathVariable int accountId, @Valid @RequestBody AccountRequestDTO accountRequestDTO) {
-        GeneralResponseDTO responseDTO = accountService.updateAccount(accountId, accountRequestDTO);
+    public ResponseEntity<AccountUpdateResponseDTO> updateAccount(@PathVariable int accountId, @RequestBody AccountUpdateRequestDTO accountUpdateRequestDTO) {
+        AccountUpdateResponseDTO responseDTO = accountService.updateAccount(accountId, accountUpdateRequestDTO);
         return ResponseEntity.ok(responseDTO);
     }
 
