@@ -30,7 +30,7 @@ public class AccountController {
         return new ResponseEntity<>(accountResponseDTO, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{accountId}")
+    @GetMapping("/account/{accountId}")
     public ResponseEntity<AccountResponseDTO> getAccount(@PathVariable int accountId) {
         AccountResponseDTO accountResponseDTO = accountService.getAccount(accountId);
         return ResponseEntity.ok(accountResponseDTO);
@@ -42,7 +42,7 @@ public class AccountController {
          return ResponseEntity.ok(allAccounts);
     }
 
-    @GetMapping("/{customerId}")
+    @GetMapping("/customer/{customerId}")
     public ResponseEntity<List<AccountResponseDTO>> getAccountsByCustomerId(@PathVariable int customerId) {
         List<AccountResponseDTO> accounts = accountService.getAccountsByCustomerId(customerId);
         return ResponseEntity.ok(accounts);
