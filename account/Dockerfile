@@ -5,7 +5,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copy the JAR file into the container
-COPY target/account-service-0.0.1-SNAPSHOT.jar account-service.jar
+COPY target/account-1.0.0.jar account-service.jar
 
 # Expose the port that the Account microservice runs on
 EXPOSE 8082

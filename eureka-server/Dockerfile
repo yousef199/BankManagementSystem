@@ -5,7 +5,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copy the JAR file into the container
-COPY target/eureka-server-0.0.1-SNAPSHOT.jar eureka-server.jar
+COPY target/eureka-server-1.0.0.jar eureka-server.jar
 
 # Expose the port that Eureka server runs on
 EXPOSE 8761

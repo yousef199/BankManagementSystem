@@ -5,7 +5,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copy the JAR file into the container
-COPY target/customer-service-0.0.1-SNAPSHOT.jar customer-service.jar
+COPY target/customer-1.0.0.jar customer-service.jar
 
 # Expose the port that the Customer microservice runs on
 EXPOSE 8081
