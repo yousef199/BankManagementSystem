@@ -34,7 +34,7 @@ class CustomerServiceTest {
 
     @Test
     void shouldCreateCustomerSuccessfully() {
-        // Arrange
+        // given
         Customer customer = new Customer();
         customer.setCustomerId(1000000);
         customer.setName("John Doe");
@@ -58,10 +58,10 @@ class CustomerServiceTest {
 
         when(customerRepository.save(any(Customer.class))).thenReturn(customer);
 
-        // Act
+        // when
         CustomerResponseDTO response = customerService.createCustomer(customerRequestDTO);
 
-        // Assert
+        // then
         assertNotNull(response);
         assertEquals(HttpStatus.CREATED.value(), response.httpStatus());
         assertEquals(customer.getCustomerId(), response.customerId());
@@ -74,7 +74,7 @@ class CustomerServiceTest {
 
     @Test
     void shouldReturnCustomerSuccessfully() {
-        // Arrange
+        // given
         Customer customer = new Customer();
         customer.setCustomerId(1000000);
         customer.setName("John Doe");
@@ -88,10 +88,10 @@ class CustomerServiceTest {
 
         when(customerRepository.findById(1000000)).thenReturn(Optional.of(customer));
 
-        // Act
+        // when
         CustomerResponseDTO response = customerService.getCustomer(1000000);
 
-        // Assert
+        // then
         assertNotNull(response);
         assertEquals(HttpStatus.OK.value(), response.httpStatus());
         assertEquals(customer.getCustomerId(), response.customerId());
@@ -102,10 +102,10 @@ class CustomerServiceTest {
 
     @Test
     void shouldThrowExceptionWhenCustomerNotFound() {
-        // Arrange
+        // given
         when(customerRepository.findById(1000000)).thenReturn(Optional.empty());
 
-        // Act & Assert
+        // when & then
         CustomerNotFoundException exception = assertThrows(
                 CustomerNotFoundException.class,
                 () -> customerService.getCustomer(1000000)
@@ -117,7 +117,7 @@ class CustomerServiceTest {
 
     @Test
     void shouldReturnAllCustomersSuccessfully() {
-        // Arrange
+        // given
         Customer customer = new Customer();
         customer.setCustomerId(1000000);
         customer.setName("John Doe");
@@ -132,10 +132,10 @@ class CustomerServiceTest {
         List<Customer> customers = Collections.singletonList(customer);
         when(customerRepository.findAll()).thenReturn(customers);
 
-        // Act
+        // when
         List<CustomerResponseDTO> responses = customerService.getAllCustomers();
 
-        // Assert
+        // then
         assertNotNull(responses);
         assertEquals(1, responses.size());
         assertEquals(customer.getCustomerId(), responses.get(0).customerId());
@@ -146,7 +146,7 @@ class CustomerServiceTest {
 
     @Test
     void shouldUpdateCustomerSuccessfully() {
-        // Arrange
+        // given
         Customer customer = new Customer();
         customer.setCustomerId(1000000);
         customer.setName("John Doe");
@@ -171,10 +171,10 @@ class CustomerServiceTest {
         when(customerRepository.findById(1000000)).thenReturn(Optional.of(customer));
         when(customerRepository.save(any(Customer.class))).thenReturn(customer);
 
-        // Act
+        // when
         CustomerUpdateResponseDTO response = customerService.updateCustomer(1000000, customerUpdateRequestDTO);
 
-        // Assert
+        // then
         assertNotNull(response);
         assertEquals(HttpStatus.OK.value(), response.httpStatus());
         assertEquals(1000000, response.customerId());
@@ -188,7 +188,7 @@ class CustomerServiceTest {
 
     @Test
     void shouldThrowExceptionWhenUpdatingNonExistentCustomer() {
-        // Arrange
+        // given
         CustomerUpdateRequestDTO customerUpdateRequestDTO = new CustomerUpdateRequestDTO(
                 "Jane Doe",
                 "987654321",
@@ -201,7 +201,7 @@ class CustomerServiceTest {
 
         when(customerRepository.findById(1000000)).thenReturn(Optional.empty());
 
-        // Act & Assert
+        // when & then
         CustomerNotFoundException exception = assertThrows(
                 CustomerNotFoundException.class,
                 () -> customerService.updateCustomer(1000000, customerUpdateRequestDTO)
@@ -214,7 +214,7 @@ class CustomerServiceTest {
 
     @Test
     void shouldDeleteCustomerSuccessfully() {
-        // Arrange
+        // given
         Customer customer = new Customer();
         customer.setCustomerId(1000000);
         customer.setName("John Doe");
@@ -228,10 +228,10 @@ class CustomerServiceTest {
 
         when(customerRepository.findById(1000000)).thenReturn(Optional.of(customer));
 
-        // Act
+        // when
         CustomerDeleteResponseDTO response = customerService.deleteCustomer(1000000);
 
-        // Assert
+        // then
         assertNotNull(response);
         assertEquals(HttpStatus.OK.value(), response.httpStatus());
         assertEquals(1000000, response.customerId());
@@ -243,7 +243,7 @@ class CustomerServiceTest {
 
     @Test
     void shouldThrowExceptionWhenDeletingCustomerWithAccounts() {
-        // Arrange
+        // given
         Customer customer = new Customer();
         customer.setCustomerId(1000000);
         customer.setName("John Doe");
@@ -257,7 +257,7 @@ class CustomerServiceTest {
 
         when(customerRepository.findById(1000000)).thenReturn(Optional.of(customer));
 
-        // Act & Assert
+        // when & then
         InvalidCustomerDeleteReqeustException exception = assertThrows(
                 InvalidCustomerDeleteReqeustException.class,
                 () -> customerService.deleteCustomer(1000000)
@@ -270,10 +270,10 @@ class CustomerServiceTest {
 
     @Test
     void shouldThrowExceptionWhenDeletingNonExistentCustomer() {
-        // Arrange
+        // given
         when(customerRepository.findById(1000000)).thenReturn(Optional.empty());
 
-        // Act & Assert
+        // when & then
         CustomerNotFoundException exception = assertThrows(
                 CustomerNotFoundException.class,
                 () -> customerService.deleteCustomer(1000000)
