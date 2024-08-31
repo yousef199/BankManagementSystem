@@ -107,13 +107,13 @@ Ensure that PostgreSQL is running and the necessary databases (customer , accoun
 ![Alt text](images/SonarAnalysis.png)
 
 #### OpenApi and Swagger UI
-
+![Alt text](images/SwaggerUI.png)
 #### Zipkin
 
 #### Eureka Server
-
+![Alt text](images/EurekaServer.png)
 #### Kafka
-
+![Alt text](images/Kafka.png)
 ## Development
 
 - Follow proper code structure and best practices for Spring Boot applications

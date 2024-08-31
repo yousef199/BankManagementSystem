@@ -5,6 +5,7 @@ import com.account.service.AccountService;
 import com.clients.account.dto.*;
 import com.clients.dto.GeneralResponseDTO;
 import com.common.enums.TopicNames;
+import io.micrometer.observation.annotation.Observed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,9 @@ public class AccountController {
     private final KafkaProducerService kafkaProducerService;
 
     @PostMapping("/registerAccount")
+    @Observed(name = "account.register",
+            contextualName = "register-account",
+            lowCardinalityKeyValues = {"operation", "registerAccount"})
     public ResponseEntity<AccountResponseDTO> createAccount(@Valid @RequestBody AccountRequestDTO accountRequestDTO) {
         AccountResponseDTO accountResponseDTO = accountService.createAccount(accountRequestDTO);
         KafkaNewAccountDTO kafkaNewAccountDTO = new KafkaNewAccountDTO(accountResponseDTO.accountId(), accountResponseDTO.customerId() , accountResponseDTO.accountType() , accountResponseDTO.accountStatus());

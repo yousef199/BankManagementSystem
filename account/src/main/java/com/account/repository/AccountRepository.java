@@ -1,6 +1,7 @@
 package com.account.repository;
 
 import com.account.entity.Account;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,5 +15,6 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
 
     @Modifying
     @Query("UPDATE Account a SET a.accountStatus = :newStatus WHERE a.customerId = :customerId")
+    @Transactional
     int updateAccountStatusByCustomerId(@Param("customerId") int customerId, @Param("newStatus") String newStatus);
 }

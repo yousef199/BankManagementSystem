@@ -1,10 +1,10 @@
 package com.customer.controller;
 
 import com.clients.customer.dto.*;
-import com.clients.dto.GeneralResponseDTO;
 import com.common.enums.TopicNames;
 import com.customer.kafka.KafkaProducerService;
 import com.customer.service.CustomerService;
+import io.micrometer.observation.annotation.Observed;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +34,9 @@ public class CustomerController {
      * @return A {@link ResponseEntity} containing the details of the created customer and HTTP status code 201.
      */
     @PostMapping("/registerCustomer")
+    @Observed(name = "customer.register",
+            contextualName = "register-customer",
+            lowCardinalityKeyValues = {"operation", "registerCustomer"})
     public ResponseEntity<CustomerResponseDTO> createCustomer(@Valid @RequestBody CustomerRequestDTO customerRequestDTO) {
         log.debug("Received request to register customer: {}", customerRequestDTO);
 
@@ -65,6 +68,9 @@ public class CustomerController {
      * @return A {@link ResponseEntity} containing the customer's details and HTTP status code 200.
      */
     @GetMapping("/{customerId}")
+    @Observed(name = "customer.get",
+            contextualName = "get-customer",
+            lowCardinalityKeyValues = {"operation", "getCustomer"})
     public ResponseEntity<CustomerResponseDTO> getCustomer(@PathVariable int customerId) {
         log.debug("Received request to get customer with ID: {}", customerId);
 
@@ -80,6 +86,9 @@ public class CustomerController {
      * @return A {@link ResponseEntity} containing a list of all customers and HTTP status code 200.
      */
     @GetMapping
+    @Observed(name = "customers.getAll",
+            contextualName = "get-all-customers",
+            lowCardinalityKeyValues = {"operation", "getAllCustomers"})
     public ResponseEntity<List<CustomerResponseDTO>> getAllCustomers() {
         log.debug("Received request to get all customers");
 
@@ -97,6 +106,9 @@ public class CustomerController {
      * @return A {@link ResponseEntity} containing the response DTO with updated fields and HTTP status code 200.
      */
     @PutMapping("/{customerId}")
+    @Observed(name = "customer.update",
+            contextualName = "update-customer",
+            lowCardinalityKeyValues = {"operation", "updateCustomer"})
     public ResponseEntity<CustomerUpdateResponseDTO> updateCustomer(
             @PathVariable int customerId,
             @Valid @RequestBody CustomerUpdateRequestDTO customerUpdateRequestDTO) {
@@ -120,6 +132,9 @@ public class CustomerController {
      * @return A {@link ResponseEntity} containing the response DTO confirming the deletion and HTTP status code 200.
      */
     @DeleteMapping("/{customerId}")
+    @Observed(name = "customer.delete",
+            contextualName = "delete-customer",
+            lowCardinalityKeyValues = {"operation", "deleteCustomer"})
     public ResponseEntity<CustomerDeleteResponseDTO> deleteCustomer(@PathVariable int customerId) {
         log.debug("Received request to delete customer with ID: {}", customerId);
 
