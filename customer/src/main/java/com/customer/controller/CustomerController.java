@@ -1,14 +1,20 @@
 package com.customer.controller;
 
 import com.clients.customer.dto.*;
+import com.clients.dto.ErrorResponseDTO;
 import com.common.enums.TopicNames;
 import com.customer.kafka.KafkaProducerService;
 import com.customer.service.CustomerService;
 import io.micrometer.observation.annotation.Observed;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +39,12 @@ public class CustomerController {
      * @param customerRequestDTO The customer data to be registered.
      * @return A {@link ResponseEntity} containing the details of the created customer and HTTP status code 201.
      */
-    @PostMapping("/registerCustomer")
+    @PostMapping(value = "/registerCustomer", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Registers a new customer", responses = {
+            @ApiResponse(responseCode = "201", description = "Customer created successfully", content = @Content(schema = @Schema(implementation = CustomerResponseDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))
+    })
     public ResponseEntity<CustomerResponseDTO> createCustomer(@Valid @RequestBody CustomerRequestDTO customerRequestDTO) {
         log.debug("Received request to register customer: {}", customerRequestDTO);
 
